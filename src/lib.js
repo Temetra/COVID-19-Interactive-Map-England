@@ -44,16 +44,30 @@ const regionColors = [
 	`rgba(255, 0, 0, ${opacity})`,
 ];
 
-const colors_arr = Array(regionColors.length);
+const colors_arr = Array(regionColors.length-1);
 
-function generateColorNumbers(max) {
-	return Array.from(colors_arr, (_, x) => Math.floor(max/regionColors.length*x));
+export function generateColorNumbers(max) {
+	return [0, ...Array.from(colors_arr, (_, x) => Math.ceil(max/(regionColors.length-1)*x+1))];
 }
 
 export function listRegionColors(max) {
 	if (max == 0) return [];
-	let labels = ["Unknown", ...generateColorNumbers(max).map(q => q == 1 ? "1 case" : `${q} cases`)];
+
+	// Get range of starting values
+	let starting = generateColorNumbers(max);
+	
+	// Create range of ending values
+	let ending = starting.map(q => q - 1);
+	ending.shift(); // remove first value
+	ending.push(max); // add max to end
+
+	// Create labels
+	let labels = ["Unknown", ...starting.map((val, idx) => idx == 0 ? "0 cases" : `${val}-${ending[idx]} cases`)];
+
+	// Merge colours with 'unknown' value
 	let colors = ["rgba(0, 0, 0, 0.0625)", ...regionColors];
+	
+	// Create array of key/value objects
 	return labels.map((label, idx) => {
 		return { 
 			label,
@@ -121,7 +135,7 @@ export function createLegend(map, maxCovidCases) {
 
 		for (let item of listRegionColors(maxCovidCases)) {
 			div.innerHTML += `<div class="keyitem">
-				<div class="color" style="background-color:${item.color};"></div>
+				<div class="color"><div style="background-color:${item.color};"></div></div>
 				<div class="label">${item.label}</div>
 			</div>`;
 		}
