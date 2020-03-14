@@ -1,5 +1,11 @@
 # Interactive map of Coronavirus (COVID-19) cases in England
 
+## Demonstration
+
+You can use the application [here](https://temetra.github.io/COVID-19-Interactive-Map-England/public/).
+
+![Screenshot](docs/screenshot.jpg?raw=true "Screenshot")
+
 ## About
 
 This website combines [UTLA cases table data](https://www.gov.uk/government/publications/covid-19-track-coronavirus-cases) with [Counties and Unitary Authorities boundary data](https://geoportal.statistics.gov.uk/datasets/counties-and-unitary-authorities-april-2019-boundaries-ew-buc).
