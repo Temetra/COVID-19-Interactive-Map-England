@@ -1,7 +1,10 @@
-//$fontfam:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+// Default font family for app
 $fontfam:Arial, Helvetica, sans-serif;
+
+// Currently using a single breakpoint for mobile support
 $breakpoint: 1200px;
 
+// Input box styles, similar to Bootstrap
 %input-shared {
 	padding:0.5rem;
 	font-family:$fontfam;
@@ -21,6 +24,7 @@ $breakpoint: 1200px;
 	}
 }
 
+// Add-on button style for input boxes
 %button-shared {
 	padding:0 1rem;
 	font-family:$fontfam;
