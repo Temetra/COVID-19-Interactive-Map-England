@@ -59,6 +59,10 @@ path {
 .legend {
 	display:flex;
 	flex-direction:column;
+	padding:0.75rem;
+	border-radius:0.75rem;
+	background-color:white;
+	filter:drop-shadow(1px 1px 2px rgba(0,0,0,0.25));
 
 	.keyitem {
 		white-space:nowrap;
@@ -70,7 +74,7 @@ path {
 			height:1rem;
 			border:solid 1px #aaa;
 			display:inline-block;
-			margin:0 0.5rem;
+			margin-right:0.5rem;
 			background-color:white;
 
 			&>div {
@@ -93,3 +97,8 @@ path {
 	}
 }
 
+// Change map popup to be similar to legend
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+	filter:drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.5));
+	box-shadow:none;
+}

@@ -128,16 +128,12 @@ export function createLegend(map, maxCovidCases) {
 	legend.onAdd = () => {
 		var div = L.DomUtil.create("div", "info legend");
 		
-		div.innerHTML += "<div class=\"legend\">";
-
 		for (let item of listRegionColors(maxCovidCases)) {
 			div.innerHTML += `<div class="keyitem">
 				<div class="color ${item.color}"><div></div></div>
 				<div class="label">${item.label}</div>
 			</div>`;
 		}
-
-		div.innerHTML += "</div>";
 
 		return div;
 	};
