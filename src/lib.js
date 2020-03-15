@@ -33,21 +33,20 @@ export function getCasesCount(data, authority, day) {
 	return item ? item[day] : null;
 }
 
-const opacity = "0.33";
-
 const regionColors = [
-	`rgba(86, 228, 86, ${opacity})`,
-	`rgba(255, 255, 0, ${opacity})`,
-	`rgba(255, 191, 0, ${opacity})`,
-	`rgba(255, 127, 0, ${opacity})`,
-	`rgba(255, 63, 0, ${opacity})`,
-	`rgba(255, 0, 0, ${opacity})`,
+	"region-unknown",
+	"region-zero",
+	"region-one",
+	"region-two",
+	"region-three",
+	"region-four",
+	"region-five",
 ];
 
-const colors_arr = Array(regionColors.length-1);
+const colors_arr = Array(regionColors.length-2);
 
 export function generateColorNumbers(max) {
-	return [0, ...Array.from(colors_arr, (_, x) => Math.ceil(max/(regionColors.length-1)*x+1))];
+	return [0, ...Array.from(colors_arr, (_, x) => Math.ceil(max/(regionColors.length-2)*x+1))];
 }
 
 export function listRegionColors(max) {
@@ -64,21 +63,18 @@ export function listRegionColors(max) {
 	// Create labels
 	let labels = ["Unknown", ...starting.map((val, idx) => idx == 0 ? "0 cases" : `${val}-${ending[idx]} cases`)];
 
-	// Merge colours with 'unknown' value
-	let colors = ["rgba(0, 0, 0, 0.0625)", ...regionColors];
-	
 	// Create array of key/value objects
 	return labels.map((label, idx) => {
 		return { 
 			label,
-			color: colors[idx]
+			color: regionColors[idx]
 		};
 	});
 }
 
 export function getRegionColour(count, max) {
 	// Default colour for a null case count
-	if (count == null) return "rgba(0, 0, 0, 0.0625)";
+	if (count == null) return regionColors[0];
 
 	// Generate range of n numbers, from 0 to max
 	let nums = generateColorNumbers(max);
@@ -86,7 +82,8 @@ export function getRegionColour(count, max) {
 	// Find the first colour that fits the count
 	for (let x = nums.length; x >= 0; x--) {
 		if (count >= nums[x]) {
-			return regionColors[x];
+			// +1 to skip 'unknown' value
+			return regionColors[x + 1];
 		}
 	}
 }
@@ -102,7 +99,7 @@ export function createGeoLayer(map, geoData, covidData, maxCovidCases, day) {
 			let authority = getMergedAuthority(feature.properties.ctyua19nm);
 			let count = getCasesCount(covidData, authority, day);
 			return { 
-				color: getRegionColour(count, maxCovidCases), 
+				className: getRegionColour(count, maxCovidCases), 
 				weight: 0.0, 
 				fillOpacity: 1.0 
 			}
@@ -135,7 +132,7 @@ export function createLegend(map, maxCovidCases) {
 
 		for (let item of listRegionColors(maxCovidCases)) {
 			div.innerHTML += `<div class="keyitem">
-				<div class="color"><div style="background-color:${item.color};"></div></div>
+				<div class="color ${item.color}"><div></div></div>
 				<div class="label">${item.label}</div>
 			</div>`;
 		}

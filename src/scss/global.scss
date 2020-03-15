@@ -35,6 +35,27 @@ h2 {
 	margin:0 0 1rem 0;
 }
 
+// Regional map colours
+$color-regional-unknown:rgba(0, 0, 0, 0.0625);
+$color-regional-zero:rgba(86, 228, 86, 0.33);
+$color-regional-one:rgba(255, 255, 0, 0.33);
+$color-regional-two:rgba(255, 191, 0, 0.33);
+$color-regional-three:rgba(255, 127, 0, 0.33);
+$color-regional-four:rgba(255, 63, 0, 0.33);
+$color-regional-five:rgba(255, 0, 0, 0.33);
+
+// Map SVG colouring
+path {
+	&.region-unknown { fill:$color-regional-unknown; }
+	&.region-zero { fill:$color-regional-zero; }
+	&.region-one { fill:$color-regional-one; }
+	&.region-two { fill:$color-regional-two; }
+	&.region-three { fill:$color-regional-three; }
+	&.region-four { fill:$color-regional-four; }
+	&.region-five { fill:$color-regional-five; }
+}
+
+// Map legend colouring
 .legend {
 	display:flex;
 	flex-direction:column;
@@ -56,6 +77,14 @@ h2 {
 				width:100%;
 				height:100%;
 			}
+
+			&.region-unknown div { background-color:$color-regional-unknown; }
+			&.region-zero div { background-color:$color-regional-zero; }
+			&.region-one div { background-color:$color-regional-one; }
+			&.region-two div { background-color:$color-regional-two; }
+			&.region-three div { background-color:$color-regional-three; }
+			&.region-four div { background-color:$color-regional-four; }
+			&.region-five div { background-color:$color-regional-five; }
 		}
 	
 		.label {
@@ -63,3 +92,4 @@ h2 {
 		}
 	}
 }
+
