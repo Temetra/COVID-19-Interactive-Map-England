@@ -59,12 +59,21 @@
 
 		tbody {
 			tr:hover {
-				background-color:rgb(221, 241, 253);
+				background-color:#dadcde;
+			}
+
+			tr.region-selected {
+				background-color:#6c757d;
+				color:white;
+				
+				&:hover {
+					background-color:#5a6268;
+				}
 			}
 
 			td {
 				padding:0.5rem 0.25rem;
-				border-bottom:solid 1px #ddd;
+				border-bottom:solid 1px #dadcde;
 				cursor: pointer;
 			}
 		}
@@ -107,7 +116,7 @@
 				{#if $covidData}
 				{#each Object.entries($covidData) as [key, value]}
 				{#if testFilterRegion(key)}
-					<tr on:click={() => selectRegion(key)}>
+					<tr on:click={() => selectRegion(key)} class:region-selected={key == $focusRegion}>
 						<td class="show">{key}</td>
 						{#each Object.entries(value) as [day, count]}
 							<td class:show={day == $focusDay}>{count}</td>
