@@ -4,7 +4,7 @@ export function getJSON(src) {
 		.catch(err => console.error(err));
 }
 
-export function getMergedAuthority(authority) {
+function getMergedAuthority(authority) {
 	switch (authority) {
 		case "Cornwall":
 		case "Isles of Scilly":
@@ -28,11 +28,6 @@ export function getSingleAuthority(authority) {
 	return authority;
 }
 
-export function getCasesCount(data, authority, day) {
-	let item = data[authority];
-	return item ? item[day] : null;
-}
-
 const regionColors = [
 	"region-unknown",
 	"region-zero",
@@ -45,11 +40,11 @@ const regionColors = [
 
 const colors_arr = Array(regionColors.length-2);
 
-export function generateColorNumbers(max) {
+function generateColorNumbers(max) {
 	return [0, ...Array.from(colors_arr, (_, x) => Math.ceil(max/(regionColors.length-2)*x+1))];
 }
 
-export function listRegionColors(max) {
+function listRegionColors(max) {
 	if (max == 0) return [];
 
 	// Get range of starting values
@@ -72,7 +67,7 @@ export function listRegionColors(max) {
 	});
 }
 
-export function getRegionColour(count, max) {
+function getRegionColour(count, max) {
 	// Default colour for a null case count
 	if (count == null) return regionColors[0];
 
@@ -88,16 +83,22 @@ export function getRegionColour(count, max) {
 	}
 }
 
-export function createGeoLayer(map, geoData, covidData, maxCovidCases, day) {
-	if (map == null || geoData == null || covidData == null || maxCovidCases == null || day == null) {
+export function createGeoLayer(map, geoData, maxCovidCases, covidData, dayIndex) {
+	if (map == null || geoData == null || maxCovidCases == null || covidData == null || dayIndex == null) {
 		return null;
 	}
 
+	// Helper function to get case count for the given day and authority
+	let getCasesCount = (authority) => {
+		let item = covidData.CasesByRegion[authority];
+		return item ? item[dayIndex] : null;
+	};
+	
 	// Create geoJSON layer
 	let geoLayer = L.geoJSON(geoData, {
 		style: feature => {
 			let authority = getMergedAuthority(feature.properties.ctyua19nm);
-			let count = getCasesCount(covidData, authority, day);
+			let count = getCasesCount(authority);
 			return { 
 				className: getRegionColour(count, maxCovidCases), 
 				weight: 0.0, 
@@ -106,7 +107,7 @@ export function createGeoLayer(map, geoData, covidData, maxCovidCases, day) {
 		},
 		onEachFeature: (feature, layer) => {
 			let authority = getMergedAuthority(feature.properties.ctyua19nm);
-			let count = getCasesCount(covidData, authority, day);
+			let count = getCasesCount(authority);
 			if (count == null) layer.bindPopup(`${authority}<br/>No data`);
 			else layer.bindPopup(`${authority}<br/>${count} case${count == 1 ? "" : "s"}`);
 		}
@@ -116,7 +117,6 @@ export function createGeoLayer(map, geoData, covidData, maxCovidCases, day) {
 	geoLayer.addTo(map);
 	return geoLayer;
 }
-
 
 export function createLegend(map, maxCovidCases) {
 	if (map == null || maxCovidCases == null) {

@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import { createGeoLayer, createLegend, getSingleAuthority } from "../lib.js";
-	import { geoData, covidData, maxCovidCases, focusDay, focusRegion } from "../stores/datastore.js";
+	import { geoData, covidData, maxCovidCases, focusDayIndex, focusRegion } from "../stores/datastore.js";
 
 	// Settings
 	const center = { lat: 52.914639, lon: -1.47189 }
@@ -39,7 +39,7 @@
 	// Update geo layer when stores update
 	$: {
 		if (geoLayer) geoLayer.remove();
-		geoLayer = createGeoLayer(map, $geoData, $covidData, $maxCovidCases, $focusDay);
+		geoLayer = createGeoLayer(map, $geoData, $maxCovidCases, $covidData, $focusDayIndex);
 	}
 
 	// Pan and zoom if region selected

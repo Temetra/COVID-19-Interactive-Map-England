@@ -1,5 +1,5 @@
 <script>
-	import { focusDay, focusRegion, availableDays, filterRegion, covidData } from "../stores/datastore.js";
+	import { focusDay, focusDayIndex, focusRegion, availableDays, filterRegion, covidData } from "../stores/datastore.js";
 
 	var selectRegion = (region) => {
 		if (region == $focusRegion) focusRegion.set("");
@@ -114,16 +114,24 @@
 			</thead>
 			<tbody>
 				{#if $covidData}
-				{#each Object.entries($covidData) as [key, value]}
-				{#if testFilterRegion(key)}
-					<tr on:click={() => selectRegion(key)} class:region-selected={key == $focusRegion}>
-						<td class="show">{key}</td>
-						{#each Object.entries(value) as [day, count]}
-							<td class:show={day == $focusDay}>{count}</td>
-						{/each}
-					</tr>
-				{/if}
-				{/each}
+					{#each Object.entries($covidData.CasesByRegion) as [name, data]}
+						{#if testFilterRegion(name)}
+							<tr on:click={() => selectRegion(name)} class:region-selected={name == $focusRegion}>
+								<td class="show">{name}</td>
+								{#each data as count, index}
+									<td class:show={index == $focusDayIndex}>{count}</td>
+								{/each}
+							</tr>
+						{/if}
+					{/each}
+					{#each Object.entries($covidData.Summary) as [name, data]}
+						<tr>
+							<td class="show">{name}</td>
+							{#each data as count, index}
+								<td class:show={index == $focusDayIndex}>{count}</td>
+							{/each}
+						</tr>
+					{/each}
 				{/if}
 			</tbody>
 		</table>

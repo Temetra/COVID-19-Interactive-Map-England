@@ -21,6 +21,9 @@ export const maxCovidCases = derived(covidData, $covidData => getMaxCovidCases($
 // Derived list of days recorded in dataset
 export const availableDays = derived(covidData, $covidData => getAvailableDays($covidData));
 
+// Derived index of selected day to focus on
+export const focusDayIndex = derived([focusDay, availableDays], ([$focusDay, $availableDays]) => $availableDays.indexOf($focusDay));
+
 // Reset focusDay when availableDays changes
 availableDays.subscribe(d => {
 	if (d && d.length > 0) focusDay.set(d[d.length-1]);
@@ -28,12 +31,8 @@ availableDays.subscribe(d => {
 
 // Queries the first record for property names; assuming all records have a full set of data
 function getAvailableDays(json) {
-	if (json) {
-		let authorities = Object.keys(json);
-		let name = authorities[0];
-		return Object.keys(json[name]);
-	}
-	return [];
+	if (json) return json.Labels;
+	else return [];
 }
 
 // Finds the highest number of cases over the entire dataset
@@ -41,19 +40,15 @@ function getMaxCovidCases(json) {
 	let max = 0;
 	if (json) {
 		// Iterate over Upper Tier Local Authorities
-		let authorities = Object.keys(json);
+		let authorities = Object.keys(json.CasesByRegion);
 		for (let i = 0; i < authorities.length; i++) {
 			let name = authorities[i];
-			// Ignore meta authority
-			if (name != "Awaiting confirmation") {
-				// Iterate over dates
-				let days = Object.keys(json[name]);
-				for (let q = 0; q < days.length; q++) {
-					let day = days[q];
-					let cases = json[name][day];
-					// Update max cases
-					if (max < cases) max = cases;
-				}
+			let data = json.CasesByRegion[name];
+			// Iterate over data
+			for (let q = 0; q < data.length; q++) {
+				// Update max cases
+				let cases = data[q];
+				if (max < cases) max = cases;
 			}
 		}
 	}
