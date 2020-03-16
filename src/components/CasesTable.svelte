@@ -125,12 +125,14 @@
 						{/if}
 					{/each}
 					{#each Object.entries($covidData.Summary) as [name, data]}
-						<tr>
-							<td class="show">{name}</td>
-							{#each data as count, index}
-								<td class:show={index == $focusDayIndex}>{count}</td>
-							{/each}
-						</tr>
+						{#if testFilterRegion(name)}
+							<tr>
+								<td class="show">{name}</td>
+								{#each data as count, index}
+									<td class:show={index == $focusDayIndex}>{count}</td>
+								{/each}
+							</tr>
+						{/if}
 					{/each}
 				{/if}
 			</tbody>
