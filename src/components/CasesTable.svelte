@@ -40,11 +40,16 @@
 			font-weight:normal;
 			text-align:left;
 			padding-bottom:0.5rem;
-			box-shadow: 0 1px 0px 0px #ccc;
+			box-shadow: 1px 1px 0px 0px #dadada;
 			position:-webkit-sticky;
 			position:sticky;
 			top:0;
 			background-color:white;
+		}
+		
+		th:first-child {
+			padding-left:0.5rem;
+			border-left: solid 2px white; 
 		}
 
 		th:not(:first-child) {
@@ -58,22 +63,29 @@
 
 		tbody, tfoot {
 			td {
-				padding:0.5rem 0.25rem;
-				border-bottom:solid 1px #dadcde;
+				padding:0.5rem;
+				border-bottom:solid 1px #dadada;
 			}
 		}
 
 		tbody {
+			tr {
+				border-left: solid 2px white; 
+			}
+
 			tr:hover {
-				background-color:#dadcde;
+				background-color: #f0f0f0;
+				color: black; 
+				border-left: solid 2px #0087ff; 
 			}
 
 			tr.region-selected {
-				background-color:#6c757d;
+				background-color:#0087ff;
 				color:white;
-				
+
 				&:hover {
-					background-color:#5a6268;
+					background-color:#0087ff66;
+					color:black;
 				}
 			}
 
@@ -88,7 +100,7 @@
 
 		tfoot {
 			tr:first-child {
-				border-top:solid 2px #666;
+				border-top:solid 2px #cdcdcd;
 			}
 		}
 

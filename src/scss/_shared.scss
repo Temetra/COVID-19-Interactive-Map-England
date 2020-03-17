@@ -13,10 +13,10 @@ $breakpoint: 1200px;
 	border-radius:7px;
 	border-style:solid;
 	border-width:1px;
-	border-color:#aaa;
+	border-color:#cdcdcd;
 
 	&:hover {
-		border-color:#5a6268;
+		border-color:#a6a6a6;
 	}
 
 	&:focus {
@@ -30,16 +30,16 @@ $breakpoint: 1200px;
 	font-family:$fontfam;
 	font-size:2rem;
 	font-weight:bold;
-	color:white;
-	background-color:#6c757d;
+	background-color:#cdcdcd;
 	border-radius:0 7px 7px 0;
 	border-style:solid;
 	border-width:1px;
-	border-color:#6c757d;
+	border-color:#cdcdcd;
 
 	&:hover {
-		border-color:#5a6268;
-		background-color:#5a6268;
+		border-color:#a6a6a6;
+		background-color:#a6a6a6;
+		color:white;
 	}
 
 	&:focus {
