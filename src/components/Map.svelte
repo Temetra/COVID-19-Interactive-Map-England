@@ -43,7 +43,7 @@
 	}
 
 	// Pan and zoom if region selected
-	focusRegion.subscribe(region => {
+	function updateMapFocus(region) {
 		if (region != null) {
 			let authority = getSingleAuthority(region);
 			if (authority.length > 0) {
@@ -51,14 +51,18 @@
 					if (authority == value.feature.properties.ctyua19nm) {
 						value.openPopup();
 						map.setView(value.getCenter(), focusZoom, { animate: true });
+						window.scrollTo(0, 0);
 					}
 				}
 			} else {
 				map.closePopup();
 				map.setView(center, zoom, { animate: true });
+				window.scrollTo(0, 0);
 			}
 		}
-	});
+	}
+
+	$: updateMapFocus($focusRegion);
 </script>
 
 <style type="text/scss">
