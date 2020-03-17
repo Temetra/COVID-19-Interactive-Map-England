@@ -36,24 +36,25 @@
 			display:none;
 		}
 
-		thead {
+		th {
+			font-weight:normal;
+			text-align:left;
+			padding-bottom:0.5rem;
+			box-shadow: 0 1px 0px 0px #ccc;
 			position:-webkit-sticky;
 			position:sticky;
 			top:0;
 			background-color:white;
 		}
 
-		th {
-			font-weight:normal;
-			text-align:left;
-			padding-bottom:0.5rem;
-			border-bottom:solid 1px #bbb;
-		}
-
 		th:not(:first-child) {
 			width:1px;
 			padding-left:0.5rem;
 			padding-right:0.5rem;
+
+			span {
+				white-space:nowrap;
+			}
 		}
 
 		tbody, tfoot {
@@ -77,6 +78,10 @@
 				}
 			}
 
+			td:first-child {
+				white-space:nowrap;
+			}
+
 			td {
 				cursor: pointer;
 			}
@@ -86,10 +91,6 @@
 			tr:first-child {
 				border-top:solid 2px #666;
 			}
-		}
-
-		tr:first-child td {
-			padding-top:0.5rem;
 		}
 
 		th + th, td + td {
@@ -118,7 +119,7 @@
 				<tr>
 					<th class="show">UTLA</th>
 					{#each $availableDays as day}
-						<th class:show={day == $focusDay}>Cases on {day}</th>
+						<th class:show={day == $focusDay}>Cases on <span>{day}</span></th>
 					{/each}
 				</tr>
 			</thead>
