@@ -2,6 +2,7 @@
 	import { onMount } from "svelte";
 	import Header from "./Header.svelte";
 	import Map from "./Map.svelte";
+	import FocusDaySlider from "./FocusDaySlider.svelte";
 	import FocusDayPicker from "./FocusDayPicker.svelte";
 	import RegionalFilter from "./RegionalFilter.svelte";
 	import CasesTable from "./CasesTable.svelte";
@@ -29,10 +30,11 @@
 		grid-template-areas:
 			"header header header"
 			"picker filter map"
+			"slider slider map"
 			"data data map"
 			"footer footer footer";
 		grid-template-columns:250px 250px 1fr;
-		grid-template-rows:auto auto minmax(350px, 1fr) auto;
+		grid-template-rows:auto auto auto minmax(350px, 1fr) auto;
 		height:100vh;
 	}
 
@@ -41,6 +43,7 @@
 			grid-template-areas:
 				"header"
 				"map"
+				"slider"
 				"picker"
 				"filter"
 				"data"
@@ -54,6 +57,7 @@
 <div class="container">
 	<Header />
 	<Map />
+	<FocusDaySlider />
 	<FocusDayPicker />
 	<RegionalFilter />
 	<CasesTable />
