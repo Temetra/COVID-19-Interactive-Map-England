@@ -29,87 +29,76 @@
 	}
 
 	table {
-		width: 100%; 
-		border-collapse: collapse;
+		width:100%; 
+		border-collapse:separate;
+		border-spacing:0;
 
 		th, td {
 			display:none;
-		}
-
-		th {
-			font-weight:normal;
 			text-align:left;
-			padding-bottom:0.5rem;
-			box-shadow: 1px 1px 0px 0px #dadada;
-			position:-webkit-sticky;
-			position:sticky;
-			top:0;
-			background-color:white;
-		}
-		
-		th:first-child {
-			padding-left:0.5rem;
-			border-left: solid 2px white; 
+			padding:0.5rem;
+			border-bottom:solid 1px #dadada;
 		}
 
-		th:not(:first-child) {
-			padding-left:0.5rem;
-			padding-right:0.5rem;
-
-			span {
-				white-space:nowrap;
-			}
-		}
-
-		tbody, tfoot {
-			td {
-				padding:0.5rem;
-				border-bottom:solid 1px #dadada;
-			}
-		}
-
-		tbody {
-			tr {
-				border-left: solid 2px white; 
-			}
-
-			tr:hover {
-				background-color: #f0f0f0;
-				color: black; 
-				border-left: solid 2px #0087ff; 
-			}
-
-			tr.region-selected {
-				background-color:#0087ff;
-				color:white;
-
-				&:hover {
-					background-color:#0087ff66;
-					color:black;
-				}
-			}
-
-			td:first-child {
-				white-space:nowrap;
-			}
-
-			td {
-				cursor: pointer;
-			}
-		}
-
-		tfoot {
-			tr:first-child {
-				border-top:solid 2px #cdcdcd;
-			}
+		th.show, td.show {
+			display:table-cell;
 		}
 
 		th + th, td + td {
 			text-align:center;
 		}
 
-		th.show, td.show {
-			display:table-cell;
+		th {
+			font-weight:normal;
+			position:-webkit-sticky;
+			position:sticky;
+			top:0;
+			background-color:white;
+			border-color:#c0c0c0;
+
+			&:first-child {
+				border-left:solid 2px white; 
+			}
+
+			span {
+				white-space:nowrap;
+			}
+		}
+
+		tbody {
+			tr {
+				td {
+					cursor: pointer;
+				}
+
+				td:first-child {
+					border-left:solid 2px white; 
+					white-space:nowrap;
+				}
+
+				&:hover td {
+					background-color: #f0f0f0;
+					color: black; 
+				}
+
+				&:hover td:first-child {
+					border-left: solid 2px #0087ff; 
+				}
+
+				&.region-selected td {
+					background-color:#0087ff;
+					color:white;
+				}
+				
+				&.region-selected:hover td {
+					background-color:#0087ff66;
+					color:black;
+				}
+
+				&:last-child td {
+					border-bottom-color:#c0c0c0;
+				}
+			}
 		}
 	}
 
