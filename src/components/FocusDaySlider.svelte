@@ -1,5 +1,5 @@
 <script>
-	import { focusDay, focusDayIndex, focusRegion, availableDays } from "../stores/datastore.js";
+	import { focusDay, focusDayIndex, availableDays } from "../stores/datastore.js";
 
 	var changeDay = (event) => {
 		focusDay.set($availableDays[event.target.value]);
