@@ -2,7 +2,6 @@
 	import { focusDay, focusDayIndex, focusRegion, availableDays } from "../stores/datastore.js";
 
 	var changeDay = (event) => {
-		focusRegion.set("");
 		focusDay.set($availableDays[event.target.value]);
 	};
 </script>
