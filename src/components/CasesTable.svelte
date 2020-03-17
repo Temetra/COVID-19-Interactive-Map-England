@@ -52,9 +52,15 @@
 
 		th:not(:first-child) {
 			width:1px;
-			white-space:nowrap;
 			padding-left:0.5rem;
 			padding-right:0.5rem;
+		}
+
+		tbody, tfoot {
+			td {
+				padding:0.5rem 0.25rem;
+				border-bottom:solid 1px #dadcde;
+			}
 		}
 
 		tbody {
@@ -72,9 +78,13 @@
 			}
 
 			td {
-				padding:0.5rem 0.25rem;
-				border-bottom:solid 1px #dadcde;
 				cursor: pointer;
+			}
+		}
+
+		tfoot {
+			tr:first-child {
+				border-top:solid 2px #666;
 			}
 		}
 
@@ -124,6 +134,10 @@
 							</tr>
 						{/if}
 					{/each}
+				{/if}
+			</tbody>
+			<tfoot>
+				{#if $covidData}
 					{#each Object.entries($covidData.Summary) as [name, data]}
 						{#if testFilterRegion(name)}
 							<tr>
@@ -135,7 +149,7 @@
 						{/if}
 					{/each}
 				{/if}
-			</tbody>
+			</tfoot>
 		</table>
 	</div>
 </section>
