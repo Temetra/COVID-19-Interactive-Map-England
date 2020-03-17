@@ -15,14 +15,17 @@ export const focusRegion = writable();
 // Value to filter region table
 export const filterRegion = writable();
 
-// Derived statistic for colouring regions
-export const maxCovidCases = derived(covidData, $covidData => getMaxCovidCases($covidData));
-
 // Derived list of days recorded in dataset
 export const availableDays = derived(covidData, $covidData => getAvailableDays($covidData));
 
 // Derived index of selected day to focus on
 export const focusDayIndex = derived([focusDay, availableDays], ([$focusDay, $availableDays]) => $availableDays.indexOf($focusDay));
+
+// Derived statistic for colouring regions
+export const maxCasesForDataset = derived(covidData, $covidData => getMaxCasesForDataset($covidData));
+
+// Derived statistic for colouring regions
+export const maxCasesForDay = derived([covidData, focusDayIndex], ([$covidData, $focusDayIndex]) => getMaxCasesForDay($covidData, $focusDayIndex));
 
 // Reset focusDay when availableDays changes
 availableDays.subscribe(d => {
@@ -35,8 +38,23 @@ function getAvailableDays(json) {
 	else return [];
 }
 
+function getMaxCasesForDay(json, day) {
+	let max = 0;
+	if (json) {
+		// Iterate over Upper Tier Local Authorities
+		let authorities = Object.keys(json.CasesByRegion);
+		for (let i = 0; i < authorities.length; i++) {
+			// Update max cases
+			let name = authorities[i];
+			let cases = json.CasesByRegion[name][day];
+			if (max < cases) max = cases;
+		}
+	}
+	return max;
+}
+
 // Finds the highest number of cases over the entire dataset
-function getMaxCovidCases(json) {
+function getMaxCasesForDataset(json) {
 	let max = 0;
 	if (json) {
 		// Iterate over Upper Tier Local Authorities
