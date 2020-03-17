@@ -8,7 +8,7 @@
 	@import "../scss/shared";
 
 	.inputgroup {
-		display: flex;
+		display:flex;
 		height:2.5rem;
 		
 		div {
@@ -27,6 +27,18 @@
 			border-bottom-right-radius:0;
 			flex:auto;
 			height:100%;
+			min-width:100px;
+		}
+	}
+
+	section {
+		grid-area:filter;
+		margin:0 1rem 0 0.5rem;
+	}
+
+	@media only screen and (max-width: $breakpoint) {
+		section {
+			margin:1rem 1rem 0 1rem;
 		}
 	}
 </style>

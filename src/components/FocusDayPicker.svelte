@@ -15,6 +15,17 @@
 		width:100%;
 		height:2.5rem;
 	}
+
+	section {
+		grid-area:picker;
+		margin:0 0.5rem 0 1rem;
+	}
+
+	@media only screen and (max-width: $breakpoint) {
+		section {
+			margin:1rem 1rem 0 1rem;
+		}
+	}
 </style>
 
 <section>
