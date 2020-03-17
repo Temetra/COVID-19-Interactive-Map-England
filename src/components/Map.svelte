@@ -43,9 +43,9 @@
 	}
 
 	// Pan and zoom if region selected
-	$: {
-		if ($focusRegion != null) {
-			let authority = getSingleAuthority($focusRegion);
+	focusRegion.subscribe(region => {
+		if (region != null) {
+			let authority = getSingleAuthority(region);
 			if (authority.length > 0) {
 				for (let value of Object.values(geoLayer._layers)) {
 					if (authority == value.feature.properties.ctyua19nm) {
@@ -58,7 +58,7 @@
 				map.setView(center, zoom, { animate: true });
 			}
 		}
-	}
+	});
 </script>
 
 <style type="text/scss">
