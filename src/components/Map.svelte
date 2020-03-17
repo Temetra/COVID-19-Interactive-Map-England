@@ -51,13 +51,11 @@
 					if (authority == value.feature.properties.ctyua19nm) {
 						value.openPopup();
 						map.setView(value.getCenter(), focusZoom, { animate: true });
-						window.scrollTo(0, 0);
 					}
 				}
 			} else {
 				map.closePopup();
 				map.setView(center, zoom, { animate: true });
-				window.scrollTo(0, 0);
 			}
 		}
 	}
