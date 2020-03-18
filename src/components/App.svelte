@@ -9,21 +9,14 @@
 	import Footer from "./Footer.svelte";
 	import { geoData, covidData } from "../stores/datastore.js";
 
-	function getJSON(src) {
-		return fetch(src)
-			.then(result => result.json())
-			.catch(err => console.error(err));
-	}
-
 	onMount(async () => {
-		getJSON("./data/Counties_and_Unitary_Authorities_April_2019_Boundaries_EW_BUC.json")
-			.then(json => {
-				geoData.set(json);
-				return getJSON("./data/Coronavirus-COVID-19-number-of-cases-in-England.json");
-			})
-			.then(json => {
-				covidData.set(json);
-			});
+		fetch("./data/Counties_and_Unitary_Authorities_April_2019_Boundaries_EW_BUC.json")
+			.then(result => result.json())
+			.then(json => geoData.set(json))
+			.then(() => fetch("./data/Coronavirus-COVID-19-number-of-cases-in-England.json"))
+			.then(result => result.json())
+			.then(json => covidData.set(json))
+			.catch(err => console.error(err));
 	});
 </script>
 

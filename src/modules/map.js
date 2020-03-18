@@ -27,38 +27,127 @@ export function initialiseMap() {
 		maxZoom: 20,
 		ext: 'png'
 	});
-	
+
 	// Dev option to avoid spamming service requests
 	if (showTiles) tileLayer.addTo(map);
 }
 
-export function updateLegend(maxCasesForDataset) {
-	if (legend) legend.remove();
-	legend = createLegend(map, maxCasesForDataset);
+export function createGeoLayer(geoData) {
+	if (geoData == null) return;
+
+	// Create geoJSON layer
+	if (geoLayer) geoLayer.remove();
+	geoLayer = L.geoJSON(geoData, {
+		style: feature => {
+			return { 
+				fillOpacity:0.5,
+				weight:0.0
+			}
+		},
+		onEachFeature: (feature, layer) => {
+			layer.on({
+				click: (data) => showFeaturePopup(data.latlng, data.sourceTarget)
+			});
+		}
+	});
+	
+	// Add to map
+	geoLayer.addTo(map);
 }
 
-export function updateGeoLayer(geoData, maxCasesForDataset, covidData, focusDayIndex) {
-	if (geoLayer) geoLayer.remove();
-	geoLayer = createGeoLayer(map, geoData, maxCasesForDataset, covidData, focusDayIndex);
+export function updateGeoLayer(maxCasesForDataset, covidData, focusDayIndex) {
+	if (geoLayer == null) return;
+
+	// Update all geojson features
+	for (let layer of Object.values(geoLayer._layers)) {
+		// Get data for feature
+		let region = getMergedAuthority(layer.feature.properties.ctyua19nm);
+		let cases = covidData.CasesByRegion[region];
+		let count = cases ? cases[focusDayIndex] : null;
+
+		// Update SVG attributes and set casesCount
+		layer._path.setAttribute("fill-opacity", 1.0);
+		layer._path.setAttribute("class", "leaflet-interactive " + getRegionColour(count, maxCasesForDataset));
+		layer.feature.properties.casesCount = count;
+
+		// Update popup
+		if (layer.isPopupOpen()) {
+			let popup = layer.getPopup();
+			let content = createPopupContent(popup._latlng, layer);
+			popup.setContent(content);
+		}
+	}
 }
 
 export function updateMapFocus(region) {
-	if (region != null) {
-		let authority = getSingleAuthority(region);
-		if (authority.length > 0) {
-			for (let value of Object.values(geoLayer._layers)) {
-				if (authority == value.feature.properties.ctyua19nm) {
-					value.openPopup();
-					map.setView(value.getCenter(), focusZoom, { animate: true });
-					window.scrollTo(0, 0);
-				}
-			}
-		} else {
-			map.closePopup();
-			map.setView(center, zoom, { animate: true });
+	if (map == null) return;
+	
+	// Regions sent from the covid dataset might be merged
+	let authority = getSingleAuthority(region);
+
+	if (authority && authority.length > 0) {
+		// Find region in geojson layer
+		let target = Object.values(geoLayer._layers)
+			.find(element => authority == element.feature.properties.ctyua19nm);
+
+		// Scroll to target and show info popup
+		if (target) {
+			let latlng = L.latLng(target.feature.properties.lat, target.feature.properties.long);
+			showFeaturePopup(latlng, target);
+			map.setView(target.getCenter(), focusZoom, { animate: true });
 			window.scrollTo(0, 0);
 		}
+	} else {
+		// Reset map if focused region is cleared
+		map.closePopup();
+		map.setView(center, zoom, { animate: true });
+		window.scrollTo(0, 0);
 	}
+}
+
+export function updateLegend(maxCasesForDataset) {
+	if (map == null || maxCasesForDataset == null) {
+		return null;
+	}
+
+	// Remove existing legend
+	if (legend) legend.remove();
+
+	// Create control
+	legend = L.control({position: "topright"});
+
+	// Add content when added to map
+	legend.onAdd = () => {
+		var div = L.DomUtil.create("div", "info legend");
+		
+		for (let item of listRegionColors(maxCasesForDataset)) {
+			div.innerHTML += `<div class="keyitem">
+				<div class="color ${item.color}"><div></div></div>
+				<div class="label">${item.label}</div>
+			</div>`;
+		}
+
+		return div;
+	};
+
+	// Add to map
+	legend.addTo(map);
+}
+
+function createPopupContent(latlng, layer) {
+	// Get data from layer
+	let authority = getMergedAuthority(layer.feature.properties.ctyua19nm);
+	let count = layer.feature.properties.casesCount;
+
+	// Create content
+	return count == null ? `${authority}<br/>No data` : 
+		`${authority}<br/>${count} case${count == 1 ? "" : "s"}`;
+}
+
+function showFeaturePopup(latlng, layer) {
+	let content = createPopupContent(latlng, layer);
+	layer.bindPopup(content, { className:"region-popup" }).addTo(map);
+	layer.openPopup(latlng);
 }
 
 function getMergedAuthority(authority) {
@@ -79,8 +168,6 @@ function getSingleAuthority(authority) {
 			return "Cornwall";
 		case "Hackney and City of London":
 			return "City of London";
-		case "Awaiting confirmation":
-			return "";
 	}
 	return authority;
 }
@@ -138,63 +225,4 @@ function getRegionColour(count, max) {
 			return regionColors[x + 1];
 		}
 	}
-}
-
-function createGeoLayer(map, geoData, maxCovidCases, covidData, dayIndex) {
-	if (map == null || geoData == null || maxCovidCases == null || covidData == null || dayIndex == null) {
-		return null;
-	}
-
-	// Helper function to get case count for the given day and authority
-	let getCasesCount = (authority) => {
-		let item = covidData.CasesByRegion[authority];
-		return item ? item[dayIndex] : null;
-	};
-	
-	// Create geoJSON layer
-	let geoLayer = L.geoJSON(geoData, {
-		style: feature => {
-			let authority = getMergedAuthority(feature.properties.ctyua19nm);
-			let count = getCasesCount(authority);
-			return { 
-				className: getRegionColour(count, maxCovidCases), 
-				weight: 0.0, 
-				fillOpacity: 1.0 
-			}
-		},
-		onEachFeature: (feature, layer) => {
-			let authority = getMergedAuthority(feature.properties.ctyua19nm);
-			let count = getCasesCount(authority);
-			if (count == null) layer.bindPopup(`${authority}<br/>No data`);
-			else layer.bindPopup(`${authority}<br/>${count} case${count == 1 ? "" : "s"}`);
-		}
-	});
-	
-	// Add to map
-	geoLayer.addTo(map);
-	return geoLayer;
-}
-
-function createLegend(map, maxCovidCases) {
-	if (map == null || maxCovidCases == null) {
-		return null;
-	}
-
-	let legend = L.control({position: "topright"});
-
-	legend.onAdd = () => {
-		var div = L.DomUtil.create("div", "info legend");
-		
-		for (let item of listRegionColors(maxCovidCases)) {
-			div.innerHTML += `<div class="keyitem">
-				<div class="color ${item.color}"><div></div></div>
-				<div class="label">${item.label}</div>
-			</div>`;
-		}
-
-		return div;
-	};
-
-	legend.addTo(map);
-	return legend;
 }

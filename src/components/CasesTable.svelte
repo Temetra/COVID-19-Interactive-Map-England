@@ -2,7 +2,7 @@
 	import { focusDay, focusDayIndex, focusRegion, availableDays, filterRegion, covidData } from "../stores/datastore.js";
 
 	var selectRegion = (region) => {
-		if (region == $focusRegion) focusRegion.set("");
+		if (region == $focusRegion) focusRegion.set(null);
 		else focusRegion.set(region);
 	};
 
