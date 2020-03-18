@@ -55,8 +55,8 @@ path {
 	&.region-five { fill:$color-regional-five; }
 }
 
-// Change map overlay to blend
-.leaflet-overlay-pane {
+// Set map overlay pane to blend
+.blend-overlay-pane {
 	opacity:0.50;
 	mix-blend-mode:multiply;
 }

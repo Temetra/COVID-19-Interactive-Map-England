@@ -7,8 +7,13 @@
 	import RegionalFilter from "./RegionalFilter.svelte";
 	import CasesTable from "./CasesTable.svelte";
 	import Footer from "./Footer.svelte";
-	import { getJSON } from "../lib.js";
 	import { geoData, covidData } from "../stores/datastore.js";
+
+	function getJSON(src) {
+		return fetch(src)
+			.then(result => result.json())
+			.catch(err => console.error(err));
+	}
 
 	onMount(async () => {
 		getJSON("./data/Counties_and_Unitary_Authorities_April_2019_Boundaries_EW_BUC.json")

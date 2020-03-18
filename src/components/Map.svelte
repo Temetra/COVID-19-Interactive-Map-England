@@ -1,67 +1,18 @@
 <script>
 	import { onMount } from "svelte";
-	import { createGeoLayer, createLegend, getSingleAuthority } from "../lib.js";
+	import { initialiseMap, updateLegend, updateGeoLayer, updateMapFocus } from "../modules/map.js";
 	import { geoData, covidData, maxCasesForDataset, focusDayIndex, focusRegion } from "../stores/datastore.js";
 
-	// Settings
-	const center = { lat: 52.914639, lon: -1.47189 }
-	const zoom = 7;
-	const focusZoom = 9;
-	const showTiles = true;
-
-	// Variables
-	var map, legend, tileLayer, geoLayer;
-
 	// Initialise map when component is mounted
-	onMount(async () => {
-		map = L.map("leaflet_ele", {
-			center,
-			zoom
-		});
-		
-		tileLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
-			attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-			subdomains: 'abcd',
-			minZoom: 0,
-			maxZoom: 20,
-			ext: 'png'
-		});
-		
-		if (showTiles) tileLayer.addTo(map);
-	});
+	onMount(async () => initialiseMap());
 
 	// Update legend when stores update
-	$: {
-		if (legend) legend.remove();
-		legend = createLegend(map, $maxCasesForDataset);
-	}
+	$: updateLegend($maxCasesForDataset);
 
 	// Update geo layer when stores update
-	$: {
-		if (geoLayer) geoLayer.remove();
-		geoLayer = createGeoLayer(map, $geoData, $maxCasesForDataset, $covidData, $focusDayIndex);
-	}
+	$: updateGeoLayer($geoData, $maxCasesForDataset, $covidData, $focusDayIndex);
 
 	// Pan and zoom if region selected
-	function updateMapFocus(region) {
-		if (region != null) {
-			let authority = getSingleAuthority(region);
-			if (authority.length > 0) {
-				for (let value of Object.values(geoLayer._layers)) {
-					if (authority == value.feature.properties.ctyua19nm) {
-						value.openPopup();
-						map.setView(value.getCenter(), focusZoom, { animate: true });
-						window.scrollTo(0, 0);
-					}
-				}
-			} else {
-				map.closePopup();
-				map.setView(center, zoom, { animate: true });
-				window.scrollTo(0, 0);
-			}
-		}
-	}
-
 	$: updateMapFocus($focusRegion);
 </script>
 

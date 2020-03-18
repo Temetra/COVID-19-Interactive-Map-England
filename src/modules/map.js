@@ -1,7 +1,64 @@
-export function getJSON(src) {
-	return fetch(src)
-		.then(result => result.json())
-		.catch(err => console.error(err));
+// Leaflet manipulation module for Map.svelte
+
+// Settings
+const center = { lat: 52.914639, lon: -1.47189 }
+const zoom = 7;
+const focusZoom = 9;
+const showTiles = true;
+
+// Variables
+var map, legend, tileLayer, geoLayer;
+
+export function initialiseMap() {
+	// Create map
+	map = L.map("leaflet_ele", {
+		center,
+		zoom
+	});
+		
+	// Add custom style to overlay pane
+	map.getPane("overlayPane").classList.add("blend-overlay-pane");
+	
+	// Create tile layer
+	tileLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
+		attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		subdomains: 'abcd',
+		minZoom: 0,
+		maxZoom: 20,
+		ext: 'png'
+	});
+	
+	// Dev option to avoid spamming service requests
+	if (showTiles) tileLayer.addTo(map);
+}
+
+export function updateLegend(maxCasesForDataset) {
+	if (legend) legend.remove();
+	legend = createLegend(map, maxCasesForDataset);
+}
+
+export function updateGeoLayer(geoData, maxCasesForDataset, covidData, focusDayIndex) {
+	if (geoLayer) geoLayer.remove();
+	geoLayer = createGeoLayer(map, geoData, maxCasesForDataset, covidData, focusDayIndex);
+}
+
+export function updateMapFocus(region) {
+	if (region != null) {
+		let authority = getSingleAuthority(region);
+		if (authority.length > 0) {
+			for (let value of Object.values(geoLayer._layers)) {
+				if (authority == value.feature.properties.ctyua19nm) {
+					value.openPopup();
+					map.setView(value.getCenter(), focusZoom, { animate: true });
+					window.scrollTo(0, 0);
+				}
+			}
+		} else {
+			map.closePopup();
+			map.setView(center, zoom, { animate: true });
+			window.scrollTo(0, 0);
+		}
+	}
 }
 
 function getMergedAuthority(authority) {
@@ -16,7 +73,7 @@ function getMergedAuthority(authority) {
 	return authority;
 }
 
-export function getSingleAuthority(authority) {
+function getSingleAuthority(authority) {
 	switch (authority) {
 		case "Cornwall and Isles of Scilly":
 			return "Cornwall";
@@ -83,7 +140,7 @@ function getRegionColour(count, max) {
 	}
 }
 
-export function createGeoLayer(map, geoData, maxCovidCases, covidData, dayIndex) {
+function createGeoLayer(map, geoData, maxCovidCases, covidData, dayIndex) {
 	if (map == null || geoData == null || maxCovidCases == null || covidData == null || dayIndex == null) {
 		return null;
 	}
@@ -118,7 +175,7 @@ export function createGeoLayer(map, geoData, maxCovidCases, covidData, dayIndex)
 	return geoLayer;
 }
 
-export function createLegend(map, maxCovidCases) {
+function createLegend(map, maxCovidCases) {
 	if (map == null || maxCovidCases == null) {
 		return null;
 	}
