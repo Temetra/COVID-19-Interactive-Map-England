@@ -1,15 +1,12 @@
 <script>
 	import { onMount } from "svelte";
-	import { initialiseMap, updateLegend, updateGeoLayer, updateMapFocus, createGeoLayer } from "../modules/map.js";
+	import { initialiseMap, updateLegend, updateGeoLayer, updateMapFocus } from "../modules/map.js";
 	import { geoData, covidData, maxCasesForDataset, focusDayIndex, focusRegion } from "../stores/datastore.js";
 
-	// Initialise map when component is mounted
-	onMount(async () => initialiseMap());
-
-	// Create geo layer when loaded
+	// Create map when geodata is loaded
 	// Erase loaded data when done
 	$: {
-		createGeoLayer($geoData);
+		initialiseMap($geoData);
 		geoData.set(null);
 	}
 

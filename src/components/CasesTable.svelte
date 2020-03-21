@@ -54,10 +54,10 @@
 			position:sticky;
 			top:0;
 			background-color:white;
-			border-color:#c0c0c0;
+			border-bottom-color:#959595;
 
 			&:first-child {
-				border-left:solid 2px white; 
+				min-width:20rem;
 			}
 
 			span {
@@ -72,31 +72,21 @@
 				}
 
 				td:first-child {
-					border-left:solid 2px white; 
 					white-space:nowrap;
 				}
 
 				&:hover td {
-					background-color: #f0f0f0;
+					background-color: #d1e9ff;
 					color: black; 
-				}
-
-				&:hover td:first-child {
-					border-left: solid 2px #0087ff; 
 				}
 
 				&.region-selected td {
 					background-color:#0087ff;
 					color:white;
 				}
-				
-				&.region-selected:hover td {
-					background-color:#0087ff66;
-					color:black;
-				}
 
 				&:last-child td {
-					border-bottom-color:#c0c0c0;
+					border-bottom-color:#959595;
 				}
 			}
 		}

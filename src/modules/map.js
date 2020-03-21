@@ -9,7 +9,9 @@ const showTiles = true;
 // Variables
 var map, legend, tileLayer, geoLayer;
 
-export function initialiseMap() {
+export function initialiseMap(geoData) {
+	if (map != null || geoData == null) return;
+
 	// Create map
 	map = L.map("leaflet_ele", {
 		center,
@@ -30,10 +32,6 @@ export function initialiseMap() {
 
 	// Dev option to avoid spamming service requests
 	if (showTiles) tileLayer.addTo(map);
-}
-
-export function createGeoLayer(geoData) {
-	if (geoData == null) return;
 
 	// Create geoJSON layer
 	if (geoLayer) geoLayer.remove();
