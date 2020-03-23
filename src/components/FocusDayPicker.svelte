@@ -1,5 +1,5 @@
 <script>
-	import { focusDay, availableDays } from "../stores/datastore.js";
+	import { focusDay, covidDays } from "../stores/datastore.js";
 
 	var changeDay = (event) => {
 		focusDay.set(event.target.value);
@@ -31,7 +31,7 @@
 	<h2>Choose a date</h2>
 	<input type="date" required
 		value={$focusDay} 
-		min={$availableDays[0]} 
-		max={$availableDays[$availableDays.length-1]}
+		min={$covidDays[0]} 
+		max={$covidDays[$covidDays.length-1]}
 		on:change={changeDay}>
 </section>

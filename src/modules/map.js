@@ -53,14 +53,14 @@ export function initialiseMap(geoData) {
 	geoLayer.addTo(map);
 }
 
-export function updateGeoLayer(maxCasesForDataset, covidData, focusDayIndex) {
+export function updateGeoLayer(maxCasesForDataset, covidRegions, focusDayIndex) {
 	if (geoLayer == null) return;
 
 	// Update all geojson features
 	for (let layer of Object.values(geoLayer._layers)) {
 		// Get data for feature
 		let region = getMergedAuthority(layer.feature.properties.ctyua19nm);
-		let cases = covidData.CasesByRegion[region];
+		let cases = covidRegions[region];
 		let count = cases ? cases[focusDayIndex] : null;
 
 		// Update SVG attributes and set casesCount

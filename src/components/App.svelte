@@ -7,7 +7,7 @@
 	import RegionalFilter from "./RegionalFilter.svelte";
 	import CasesTable from "./CasesTable.svelte";
 	import Footer from "./Footer.svelte";
-	import { geoData, covidData } from "../stores/datastore.js";
+	import { geoData, covidDays, covidSummary, covidRegions } from "../stores/datastore.js";
 
 	onMount(async () => {
 		fetch("./data/Counties_and_Unitary_Authorities_April_2019_Boundaries_EW_BUC.json")
@@ -15,7 +15,11 @@
 			.then(json => geoData.set(json))
 			.then(() => fetch("./data/Coronavirus-COVID-19-number-of-cases-in-England.json"))
 			.then(result => result.json())
-			.then(json => covidData.set(json))
+			.then(json => {
+				covidDays.set(json.Labels);
+				covidSummary.set(json.Summary);
+				covidRegions.set(json.CasesByRegion);
+			})
 			.catch(err => console.error(err));
 	});
 </script>

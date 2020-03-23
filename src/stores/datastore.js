@@ -4,7 +4,9 @@ import { writable, derived } from "svelte/store";
 export const geoData = writable();
 
 // Merged COVID-19 number of cases in England data
-export const covidData = writable();
+export const covidDays = writable([]);
+export const covidSummary = writable({});
+export const covidRegions = writable({});
 
 // Selected day to focus map on
 export const focusDay = writable();
@@ -15,60 +17,32 @@ export const focusRegion = writable();
 // Value to filter region table
 export const filterRegion = writable();
 
-// Derived list of days recorded in dataset
-export const availableDays = derived(covidData, $covidData => getAvailableDays($covidData));
-
 // Derived index of selected day to focus on
-export const focusDayIndex = derived([focusDay, availableDays], ([$focusDay, $availableDays]) => $availableDays.indexOf($focusDay));
+export const focusDayIndex = derived([focusDay, covidDays], ([$focusDay, $covidDays]) => $covidDays.indexOf($focusDay));
 
 // Derived statistic for colouring regions
-export const maxCasesForDataset = derived(covidData, $covidData => getMaxCasesForDataset($covidData));
+export const maxCasesForDataset = derived(covidRegions, $covidRegions => getMaxCasesForDataset($covidRegions));
 
 // Derived statistic for colouring regions
-export const maxCasesForDay = derived([covidData, focusDayIndex], ([$covidData, $focusDayIndex]) => getMaxCasesForDay($covidData, $focusDayIndex));
+export const maxCasesForDay = derived([covidRegions, focusDayIndex], ([$covidRegions, $focusDayIndex]) => getMaxCasesForDay($covidRegions, $focusDayIndex));
 
-// Reset focusDay when availableDays changes
-availableDays.subscribe(d => {
+// Reset focusDay when covidDays changes
+covidDays.subscribe(d => {
 	if (d && d.length > 0) focusDay.set(d[d.length-1]);
 });
 
-// Queries the first record for property names; assuming all records have a full set of data
-function getAvailableDays(json) {
-	if (json) return json.Labels;
-	else return [];
-}
-
-function getMaxCasesForDay(json, day) {
-	let max = 0;
-	if (json) {
-		// Iterate over Upper Tier Local Authorities
-		let authorities = Object.keys(json.CasesByRegion);
-		for (let i = 0; i < authorities.length; i++) {
-			// Update max cases
-			let name = authorities[i];
-			let cases = json.CasesByRegion[name][day];
-			if (max < cases) max = cases;
-		}
-	}
-	return max;
-}
-
 // Finds the highest number of cases over the entire dataset
-function getMaxCasesForDataset(json) {
-	let max = 0;
-	if (json) {
-		// Iterate over Upper Tier Local Authorities
-		let authorities = Object.keys(json.CasesByRegion);
-		for (let i = 0; i < authorities.length; i++) {
-			let name = authorities[i];
-			let data = json.CasesByRegion[name];
-			// Iterate over data
-			for (let q = 0; q < data.length; q++) {
-				// Update max cases
-				let cases = data[q];
-				if (max < cases) max = cases;
-			}
-		}
-	}
-	return max;
+function getMaxCasesForDataset(covidRegions) {
+	return Object.values(covidRegions).reduce((subtotal, arr) => {
+		return arr.reduce((prev, curr) => {
+			return Math.max(prev, curr);
+		}, subtotal);
+	}, 0);
+}
+
+// Finds the highest number of cases for a specific day
+function getMaxCasesForDay(covidRegions, day) {
+	return Object.values(covidRegions).reduce((subtotal, arr) => {
+		return Math.max(subtotal, arr[day]);
+	}, 0);
 }

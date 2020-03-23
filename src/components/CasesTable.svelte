@@ -1,5 +1,5 @@
 <script>
-	import { focusDay, focusDayIndex, focusRegion, availableDays, filterRegion, covidData } from "../stores/datastore.js";
+	import { focusDay, focusDayIndex, focusRegion, covidDays, filterRegion, covidSummary, covidRegions } from "../stores/datastore.js";
 
 	var selectRegion = (region) => {
 		if (region == $focusRegion) focusRegion.set(null);
@@ -108,38 +108,34 @@
 			<thead>
 				<tr>
 					<th class="show">UTLA</th>
-					{#each $availableDays as day}
+					{#each $covidDays as day}
 						<th class:show={day == $focusDay}>Cases on <span>{day}</span></th>
 					{/each}
 				</tr>
 			</thead>
 			<tbody>
-				{#if $covidData}
-					{#each Object.entries($covidData.CasesByRegion) as [name, data]}
-						{#if testFilterRegion(name)}
-							<tr on:click={() => selectRegion(name)} class:region-selected={name == $focusRegion}>
-								<td class="show">{name}</td>
-								{#each data as count, index}
-									<td class:show={index == $focusDayIndex}>{count}</td>
-								{/each}
-							</tr>
-						{/if}
-					{/each}
-				{/if}
+				{#each Object.entries($covidRegions) as [name, data]}
+					{#if testFilterRegion(name)}
+						<tr on:click={() => selectRegion(name)} class:region-selected={name == $focusRegion}>
+							<td class="show">{name}</td>
+							{#each data as count, index}
+								<td class:show={index == $focusDayIndex}>{count}</td>
+							{/each}
+						</tr>
+					{/if}
+				{/each}
 			</tbody>
 			<tfoot>
-				{#if $covidData}
-					{#each Object.entries($covidData.Summary) as [name, data]}
-						{#if testFilterRegion(name)}
-							<tr>
-								<td class="show">{name}</td>
-								{#each data as count, index}
-									<td class:show={index == $focusDayIndex}>{count}</td>
-								{/each}
-							</tr>
-						{/if}
-					{/each}
-				{/if}
+				{#each Object.entries($covidSummary) as [name, data]}
+					{#if testFilterRegion(name)}
+						<tr>
+							<td class="show">{name}</td>
+							{#each data as count, index}
+								<td class:show={index == $focusDayIndex}>{count}</td>
+							{/each}
+						</tr>
+					{/if}
+				{/each}
 			</tfoot>
 		</table>
 	</div>

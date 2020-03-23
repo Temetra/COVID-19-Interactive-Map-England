@@ -1,8 +1,8 @@
 <script>
-	import { focusDay, focusDayIndex, availableDays } from "../stores/datastore.js";
+	import { focusDay, focusDayIndex, covidDays } from "../stores/datastore.js";
 
 	var changeDay = (event) => {
-		focusDay.set($availableDays[event.target.value]);
+		focusDay.set($covidDays[event.target.value]);
 	};
 </script>
 
@@ -29,7 +29,7 @@
 	<h2>Pick date within range</h2>
 	<input type="range" 
 		min="0" 
-		max={$availableDays.length-1} 
+		max={$covidDays.length-1} 
 		value={$focusDayIndex}
 		on:input={changeDay}>
 </section>
