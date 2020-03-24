@@ -1,20 +1,16 @@
 <script>
 	import { onMount } from "svelte";
 	import { initialiseMap, updateLegend, updateGeoLayer, updateMapFocus } from "../modules/map.js";
-	import { geoData, covidRegions, maxCasesForDataset, focusDayIndex, focusRegion } from "../stores/datastore.js";
+	import { geoData, covidRegions, covidLookup, maxCasesForDataset, focusDayIndex, focusRegion } from "../stores/datastore.js";
 
 	// Create map when geodata is loaded
-	// Erase loaded data when done
-	$: {
-		initialiseMap($geoData);
-		geoData.set(null);
-	}
+	$: initialiseMap($geoData);
 
 	// Update legend
 	$: updateLegend($maxCasesForDataset);
 
 	// Update geo layer
-	$: updateGeoLayer($maxCasesForDataset, $covidRegions, $focusDayIndex);
+	$: updateGeoLayer($maxCasesForDataset, $covidLookup, $focusDayIndex);
 
 	// Pan and zoom if region selected
 	$: updateMapFocus($focusRegion);

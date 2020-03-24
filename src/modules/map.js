@@ -53,25 +53,31 @@ export function initialiseMap(geoData) {
 	geoLayer.addTo(map);
 }
 
-export function updateGeoLayer(maxCasesForDataset, covidRegions, focusDayIndex) {
+export function updateGeoLayer(maxCasesForDataset, covidLookup, focusDayIndex) {
 	if (geoLayer == null) return;
 
 	// Update all geojson features
 	for (let layer of Object.values(geoLayer._layers)) {
 		// Get data for feature
-		let region = getMergedAuthority(layer.feature.properties.ctyua19nm);
-		let cases = covidRegions[region];
-		let count = cases ? cases[focusDayIndex] : null;
+		let data = covidLookup[layer.feature.properties.ctyua19cd];
+		let count = data ? data.Cases[focusDayIndex] : null;
 
 		// Update SVG attributes and set casesCount
 		layer._path.setAttribute("fill-opacity", 1.0);
 		layer._path.setAttribute("class", "leaflet-interactive " + getRegionColour(count, maxCasesForDataset));
+
+		// Set case count for day
 		layer.feature.properties.casesCount = count;
+
+		// Add merged authority name if different from feature name
+		if (data && layer.feature.properties.ctyua19nm != data.Name) {
+			layer.feature.properties.mergedAuthority = data.Name;
+		}
 
 		// Update popup
 		if (layer.isPopupOpen()) {
 			let popup = layer.getPopup();
-			let content = createPopupContent(popup._latlng, layer);
+			let content = createPopupContent(layer);
 			popup.setContent(content);
 		}
 	}
@@ -79,14 +85,11 @@ export function updateGeoLayer(maxCasesForDataset, covidRegions, focusDayIndex) 
 
 export function updateMapFocus(region) {
 	if (map == null) return;
-	
-	// Regions sent from the covid dataset might be merged
-	let authority = getSingleAuthority(region);
 
-	if (authority && authority.length > 0) {
+	if (region && region.length > 0) {
 		// Find region in geojson layer
 		let target = Object.values(geoLayer._layers)
-			.find(element => authority == element.feature.properties.ctyua19nm);
+			.find(element => region == element.feature.properties.ctyua19cd);
 
 		// Scroll to target and show info popup
 		if (target) {
@@ -132,9 +135,9 @@ export function updateLegend(maxCasesForDataset) {
 	legend.addTo(map);
 }
 
-function createPopupContent(latlng, layer) {
+function createPopupContent(layer) {
 	// Get data from layer
-	let authority = getMergedAuthority(layer.feature.properties.ctyua19nm);
+	let authority = layer.feature.properties.mergedAuthority || layer.feature.properties.ctyua19nm;
 	let count = layer.feature.properties.casesCount;
 
 	// Create content
@@ -143,31 +146,9 @@ function createPopupContent(latlng, layer) {
 }
 
 function showFeaturePopup(latlng, layer) {
-	let content = createPopupContent(latlng, layer);
+	let content = createPopupContent(layer);
 	layer.bindPopup(content, { className:"region-popup" }).addTo(map);
 	layer.openPopup(latlng);
-}
-
-function getMergedAuthority(authority) {
-	switch (authority) {
-		case "Cornwall":
-		case "Isles of Scilly":
-			return "Cornwall and Isles of Scilly";
-		case "Hackney":
-		case "City of London":
-			return "Hackney and City of London";
-	}
-	return authority;
-}
-
-function getSingleAuthority(authority) {
-	switch (authority) {
-		case "Cornwall and Isles of Scilly":
-			return "Cornwall";
-		case "Hackney and City of London":
-			return "City of London";
-	}
-	return authority;
 }
 
 const regionColors = [

@@ -114,11 +114,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each Object.entries($covidRegions) as [name, data]}
+				{#each Object.entries($covidRegions) as [name, {Cases:cases, Codes:codes}]}
 					{#if testFilterRegion(name)}
-						<tr on:click={() => selectRegion(name)} class:region-selected={name == $focusRegion}>
+						<tr on:click={() => selectRegion(codes[0])} class:region-selected={codes[0] == $focusRegion}>
 							<td class="show">{name}</td>
-							{#each data as count, index}
+							{#each cases as count, index}
 								<td class:show={index == $focusDayIndex}>{count}</td>
 							{/each}
 						</tr>
