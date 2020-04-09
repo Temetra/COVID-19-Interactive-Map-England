@@ -1,7 +1,7 @@
 <script>
 	import { focusDay, focusDayIndex, focusRegion, covidDays, filterRegion, covidSummary, covidRegions } from "../stores/datastore.js";
 
-	var selectRegion = (region) => {
+	let selectRegion = (region) => {
 		if (region == $focusRegion) focusRegion.set(null);
 		else focusRegion.set(region);
 	};
@@ -20,7 +20,6 @@
 		grid-area:data;
 		display:flex;
 		flex-direction:column;
-		margin:2rem 1rem 0 1rem;
 	}
 
 	.tablecontainer {
@@ -34,14 +33,9 @@
 		border-spacing:0;
 
 		th, td {
-			display:none;
 			text-align:left;
 			padding:0.5rem;
 			border-bottom:solid 1px #dadada;
-		}
-
-		th.show, td.show {
-			display:table-cell;
 		}
 
 		th + th, td + td {
@@ -92,9 +86,13 @@
 		}
 	}
 
-	@media only screen and (max-width: $breakpoint) {
+	@include breakpoint-min(stacked) {
 		table {
 			th, td {
+				display:none;
+			}
+
+			th.show, td.show {
 				display:table-cell;
 			}
 		}

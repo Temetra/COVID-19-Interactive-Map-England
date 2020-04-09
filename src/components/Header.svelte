@@ -2,10 +2,13 @@
 </script>
 
 <style type="text/scss">
-header {
-	grid-area:header;
-	margin:2rem 1rem;
-}
+	header {
+		grid-area:header;
+	}
+
+	h1 {
+		margin:2rem 0 1rem 0;
+	}
 </style>
 
 <header>

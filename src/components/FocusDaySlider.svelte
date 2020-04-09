@@ -1,7 +1,15 @@
 <script>
 	import { focusDay, focusDayIndex, covidDays } from "../stores/datastore.js";
 
-	var changeDay = (event) => {
+	const dtf = new Intl.DateTimeFormat("en-GB", { weekday: "short", year: "numeric", month: "long", day: "numeric" });
+
+	let formattedDate = "Date";
+
+	$: {
+		if ($focusDay) formattedDate = dtf.format(new Date($focusDay));
+	}
+
+	let changeDay = (event) => {
 		focusDay.set($covidDays[event.target.value]);
 	};
 </script>
@@ -11,22 +19,26 @@
 
 	section {
 		grid-area:slider;
-			margin:2rem 1rem 0 1rem;
+		overflow:hidden;
 	}
 
 	input[type=range] {
 		width:100%;
+		height:2.5rem;
+		margin:0;
 	}
 
-	@media only screen and (max-width: $breakpoint) {
-		section {
-			margin:1rem 1rem 0 1rem;
-		}
+	h2 {
+		background-image: url("img/calendar-outline.svg");
+		background-repeat: no-repeat;
+		background-size: 18px;
+		padding-left: 2rem;
+		background-position: left center;
 	}
 </style>
 
 <section>
-	<h2>Pick date within range</h2>
+	<h2>{formattedDate}</h2>
 	<input type="range" 
 		min="0" 
 		max={$covidDays.length-1} 

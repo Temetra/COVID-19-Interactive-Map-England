@@ -1,12 +1,16 @@
 <script>
 	import { filterRegion } from "../stores/datastore.js";
 
-	var resetFilter = () => filterRegion.set("");
+	let resetFilter = () => filterRegion.set("");
 </script>
 
 <style type="text/scss">
 	@import "../scss/shared";
 
+	section {
+		grid-area:filter;
+	}
+	
 	.inputgroup {
 		display:flex;
 		height:2.5rem;
@@ -18,6 +22,17 @@
 				@extend %button-shared;
 				width:100%;
 				height:100%;
+				padding:0 0.5rem;
+
+				img {
+					height:2rem;
+				}
+
+				&:hover {
+					img {
+						filter:invert(100%);
+					}
+				}
 			}
 		}
 
@@ -27,19 +42,16 @@
 			border-bottom-right-radius:0;
 			flex:auto;
 			height:100%;
-			min-width:100px;
+			width:0;
 		}
 	}
 
-	section {
-		grid-area:filter;
-		margin:0 1rem 0 0.5rem;
-	}
-
-	@media only screen and (max-width: $breakpoint) {
-		section {
-			margin:1rem 1rem 0 1rem;
-		}
+	h2 {
+		background-image: url("img/search-outline.svg");
+		background-repeat: no-repeat;
+		background-size: 20px;
+		padding-left: 2rem;
+		background-position: left center;
 	}
 </style>
 
@@ -48,7 +60,7 @@
 	<div class="inputgroup">
 		<input bind:value={$filterRegion}>
 		<div>
-			<button on:click={resetFilter}>&times;</button>
+			<button on:click={resetFilter}><img src="img/close.svg" alt="clear" /></button>
 		</div>
 	</div>
 </section>

@@ -1,8 +1,18 @@
 // Default font family for app
 $fontfam:Arial, Helvetica, sans-serif;
 
-// Currently using a single breakpoint for mobile support
-$breakpoint: 1200px;
+$grid-breakpoints: (
+	stacked: 1200px,
+	widescreen: 1400px
+);
+
+@mixin breakpoint-min($key) {
+	@media (min-width: map-get($grid-breakpoints, $key)) { @content; }
+}
+
+@mixin breakpoint-max($key) {
+	@media (max-width: map-get($grid-breakpoints, $key)) { @content; }
+}
 
 // Input box styles, similar to Bootstrap
 %input-shared {
@@ -26,10 +36,8 @@ $breakpoint: 1200px;
 
 // Add-on button style for input boxes
 %button-shared {
-	padding:0 1rem;
-	font-family:$fontfam;
-	font-size:2rem;
-	font-weight:bold;
+	display:flex;
+	align-items:center;
 	background-color:#cdcdcd;
 	border-radius:0 7px 7px 0;
 	border-style:solid;
@@ -39,7 +47,6 @@ $breakpoint: 1200px;
 	&:hover {
 		border-color:#a6a6a6;
 		background-color:#a6a6a6;
-		color:white;
 	}
 
 	&:focus {

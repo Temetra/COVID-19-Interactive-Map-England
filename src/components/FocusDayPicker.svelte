@@ -1,7 +1,7 @@
 <script>
 	import { focusDay, covidDays } from "../stores/datastore.js";
 
-	var changeDay = (event) => {
+	let changeDay = (event) => {
 		focusDay.set(event.target.value);
 	};
 </script>
@@ -9,21 +9,14 @@
 <style type="text/scss">
 	@import "../scss/shared";
 
+	section {
+		grid-area:picker;
+	}
+
 	input {
 		@extend %input-shared;
 		width:100%;
 		height:2.5rem;
-	}
-
-	section {
-		grid-area:picker;
-		margin:0 0.5rem 0 1rem;
-	}
-
-	@media only screen and (max-width: $breakpoint) {
-		section {
-			margin:1rem 1rem 0 1rem;
-		}
 	}
 </style>
 

@@ -26,12 +26,12 @@
 	#leaflet_ele {
 		width:100%;
 		height:100%;
-		border-radius:1rem 0 0 1rem;
+		border-radius:1rem;
 	}
 
-	@media only screen and (max-width: $breakpoint) {
+	@include breakpoint-min(stacked) {
 		#leaflet_ele {
-			border-radius:0;
+			border-radius:1rem 0 0 1rem;
 		}
 	}
 </style>

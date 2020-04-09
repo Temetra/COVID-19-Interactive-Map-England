@@ -2,17 +2,16 @@
 </script>
 
 <style type="text/scss">
-footer {
-	grid-area:footer;
-	padding:1rem;
-	text-align:right;
+	footer {
+		grid-area:footer;
+		text-align:right;
 
-	ul {
-		list-style-type:none;
-		margin:0;
-		padding:0;
+		ul {
+			list-style-type:none;
+			margin:0 0 1rem 0;
+			padding:0;
+		}
 	}
-}
 </style>
 
 <footer>

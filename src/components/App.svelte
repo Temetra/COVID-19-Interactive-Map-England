@@ -2,10 +2,9 @@
 	import { onMount } from "svelte";
 	import Header from "./Header.svelte";
 	import Map from "./Map.svelte";
-	import FocusDaySlider from "./FocusDaySlider.svelte";
-	import FocusDayPicker from "./FocusDayPicker.svelte";
-	import RegionalFilter from "./RegionalFilter.svelte";
+	import Controls from "./Controls.svelte";
 	import CasesTable from "./CasesTable.svelte";
+	import FlowTable from "./FlowTable.svelte";
 	import Footer from "./Footer.svelte";
 	import { geoData, covidDays, covidSummary, covidRegions } from "../stores/datastore.js";
 
@@ -30,28 +29,49 @@
 	.container {
 		display:grid;
 		grid-template-areas:
-			"header header header"
-			"picker filter map"
-			"slider slider map"
-			"data data map"
-			"footer footer footer";
-		grid-template-columns:250px 250px 1fr;
-		grid-template-rows:auto auto auto minmax(350px, 1fr) auto;
+			"header"
+			"map"
+			"controls"
+			"data"
+			"footer";
+		grid-template-columns:minmax(600px, 1fr);
+		grid-template-rows:auto minmax(600px, 1fr) auto auto auto;
+		gap:1rem 0;
+		margin:0 1rem;
 		height:100vh;
 	}
 
-	@media only screen and (max-width: $breakpoint) {
+	@include breakpoint-min(stacked) {
 		.container {
 			grid-template-areas:
-				"header"
-				"map"
-				"slider"
-				"picker"
-				"filter"
-				"data"
-				"footer";
-			grid-template-columns:minmax(600px, 1fr);
-			grid-template-rows:auto minmax(600px, 1fr) auto;
+				"header header"
+				"controls map"
+				"data map"
+				"footer footer";
+			grid-template-columns:400px 1fr;
+			grid-template-rows:auto auto minmax(300px, 1fr) auto;
+			margin:0;
+
+			&>:global(section) {
+				margin-left:1rem;
+			}
+
+			&>:global(header), &>:global(footer) {
+				margin-left:1rem;
+				margin-right:1rem;
+			}
+		}
+	}
+
+	@include breakpoint-min(widescreen) {
+		.container {
+			grid-template-areas:
+				"header header"
+				"controls map"
+				"data map"
+				"footer footer";
+			grid-template-columns:555px 1fr;
+			grid-template-rows:auto auto minmax(350px, 1fr) auto;
 		}
 	}
 </style>
@@ -59,9 +79,7 @@
 <div class="container">
 	<Header />
 	<Map />
-	<FocusDaySlider />
-	<FocusDayPicker />
-	<RegionalFilter />
-	<CasesTable />
+	<Controls />
+	<FlowTable />
 	<Footer />
 </div>

@@ -7,7 +7,7 @@ const focusZoom = 9;
 const showTiles = true;
 
 // Variables
-var map, legend, tileLayer, geoLayer;
+let map, legend, tileLayer, geoLayer;
 
 export function initialiseMap(geoData) {
 	if (map != null || geoData == null) return;
@@ -119,7 +119,7 @@ export function updateLegend(maxCasesForDataset) {
 
 	// Add content when added to map
 	legend.onAdd = () => {
-		var div = L.DomUtil.create("div", "info legend");
+		let div = L.DomUtil.create("div", "info legend");
 		
 		for (let item of listRegionColors(maxCasesForDataset)) {
 			div.innerHTML += `<div class="keyitem">
