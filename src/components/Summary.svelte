@@ -8,6 +8,7 @@
 
 	section {
 		grid-area:summary;
+		padding-right:1rem;
 	}
 
 	.container {

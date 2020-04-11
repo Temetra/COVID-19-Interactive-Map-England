@@ -15,6 +15,7 @@
 		grid-template-columns:1fr;
 		grid-template-rows:auto;
 		gap:1rem;
+		margin-bottom:1.5rem;
 	}
 
 	@include breakpoint-min(stacked) {
@@ -31,6 +32,7 @@
 			grid-template-areas:
 				"slider filter";
 			grid-template-columns:0.5fr 0.5fr;
+			margin-bottom:0;
 		}
 	}
 </style>
