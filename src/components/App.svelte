@@ -3,7 +3,7 @@
 	import Header from "./Header.svelte";
 	import Map from "./Map.svelte";
 	import Controls from "./Controls.svelte";
-	import CasesTable from "./CasesTable.svelte";
+	import Summary from "./Summary.svelte";
 	import FlowTable from "./FlowTable.svelte";
 	import Footer from "./Footer.svelte";
 	import { geoData, covidDays, covidSummary, covidRegions } from "../stores/datastore.js";
@@ -32,10 +32,11 @@
 			"header"
 			"map"
 			"controls"
+			"summary"
 			"data"
 			"footer";
 		grid-template-columns:minmax(600px, 1fr);
-		grid-template-rows:auto minmax(600px, 1fr) auto auto auto;
+		grid-template-rows:auto minmax(600px, 1fr) auto auto auto auto;
 		gap:1rem 0;
 		margin:0 1rem;
 		height:100vh;
@@ -46,10 +47,11 @@
 			grid-template-areas:
 				"header header"
 				"controls map"
+				"summary map"
 				"data map"
 				"footer footer";
 			grid-template-columns:400px 1fr;
-			grid-template-rows:auto auto minmax(300px, 1fr) auto;
+			grid-template-rows:auto auto auto minmax(300px, 1fr) auto;
 			margin:0;
 
 			&>:global(section) {
@@ -68,10 +70,11 @@
 			grid-template-areas:
 				"header header"
 				"controls map"
+				"summary map"
 				"data map"
 				"footer footer";
 			grid-template-columns:555px 1fr;
-			grid-template-rows:auto auto minmax(350px, 1fr) auto;
+			grid-template-rows:auto auto auto minmax(350px, 1fr) auto;
 		}
 	}
 </style>
@@ -80,6 +83,7 @@
 	<Header />
 	<Map />
 	<Controls />
+	<Summary />
 	<FlowTable />
 	<Footer />
 </div>

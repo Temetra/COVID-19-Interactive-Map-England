@@ -2,19 +2,19 @@
 	import { createEventDispatcher } from "svelte";
 	import { fade } from "svelte/transition";
 	
-	export let name, item, caseIndex, focusRegion;
+	export let name, cases, caseIndex, code = null, focusRegion = null;
 
 	const dispatch = createEventDispatcher();
 	
 	let currentCount, change, increase, decrease, same, selected;
 
 	$: {
-		currentCount = item.Cases[caseIndex];
-		change = caseIndex == 0 ? currentCount : currentCount - item.Cases[Math.max(caseIndex - 1, 0)];
+		currentCount = cases[caseIndex];
+		change = caseIndex == 0 ? currentCount : currentCount - cases[Math.max(caseIndex - 1, 0)];
 		increase = change > 0;
 		decrease = change < 0;
 		same = change == 0;
-		selected = item.Codes[0] == focusRegion;
+		selected = (code && code == focusRegion);
 	}
 </script>
 
@@ -25,10 +25,13 @@
 		break-inside:avoid;
 		padding:0.5rem 0.75rem;
 		border-radius:1rem;
+	}
+
+	.hoverable {
 		cursor:pointer;
 	}
 
-	.item:hover, .selected {
+	.hoverable:hover, .selected {
 		background:#dbf8fd;
 	}
 
@@ -57,7 +60,7 @@
 	}
 </style>
 
-<div class="item" class:selected transition:fade on:click={() => dispatch("click", item.Codes[0])}>
+<div class="item" class:hoverable={code} class:selected transition:fade on:click={() => dispatch("click", code)}>
 	<div class="name">{name}</div>
 	<span class="count">{currentCount}</span>
 	<span class="change" class:increase class:decrease class:same>{change}</span>

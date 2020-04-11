@@ -73,7 +73,12 @@
 		<FlowTableHeading {prefix} />
 			<div class="container">
 			{#each items as {name, item} (name)}
-				<FlowTableItem {name} {item} caseIndex={$focusDayIndex} focusRegion={$focusRegion} on:click={selectRegion} />
+				<FlowTableItem {name} 
+					cases={item.Cases} 
+					caseIndex={$focusDayIndex} 
+					code={item.Codes[0]}
+					focusRegion={$focusRegion} 
+					on:click={selectRegion} />
 			{/each}
 			</div>
 	{/each}
