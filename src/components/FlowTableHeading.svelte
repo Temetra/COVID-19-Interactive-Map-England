@@ -8,7 +8,7 @@
 		background:#fff;
 		border-bottom:solid 1px #ccc;
 		padding:0.5rem 0.75rem;
-		margin:0 0.5rem 1rem 0;
+		margin:1rem 0.5rem 0.5rem 0;
 		position:sticky;
   		top:0;
 	}
