@@ -12,5 +12,5 @@
 </style>
 
 <header>
-	<h1>Interactive map of Coronavirus (COVID-19) cases in England</h1>
+	<h1>Interactive map of Coronavirus (COVID-19) cases (cumulative, lab-confirmed) in England</h1>
 </header>
