@@ -19,23 +19,26 @@ const regionColors = [
 // Variables
 let map, legend, tileLayer, geoLayer;
 
-// Create map when geodata is loaded
-geoData.subscribe(data => initialiseMap(data));
+// Add geodata to map
+geoData.subscribe(data => addGeoLayer(data));
 
 // Update legend
 maxCasesForDataset.subscribe(maxCases => updateLegend(maxCases));
 
 // Update geo layer
-geoLayerSource.subscribe(([lookup, maxCases, focusDay]) => updateGeoLayer(lookup, maxCases, focusDay));
+geoLayerSource.subscribe(([geoData, lookup, maxCases, focusDay]) => {
+	updateGeoLayer(lookup, maxCases, focusDay);
+});
 
 // Pan and zoom if region selected
 focusRegion.subscribe(region => updateMapFocus(region));
 
-function initialiseMap(geoData) {
-	if (map != null || geoData == null) return;
+export function createMap(mapElement) {
+	// Only create map once
+	if (map != null) return;
 
 	// Create map
-	map = L.map("leaflet_ele", {
+	map = L.map(mapElement, {
 		center,
 		zoom
 	});
@@ -54,6 +57,11 @@ function initialiseMap(geoData) {
 
 	// Dev option to avoid spamming service requests
 	if (showTiles) tileLayer.addTo(map);
+}
+
+function addGeoLayer(geoData) {
+	// Only create if map and data exist
+	if (map == null || geoData == null) return;
 
 	// Create geoJSON layer
 	if (geoLayer) geoLayer.remove();
@@ -76,7 +84,7 @@ function initialiseMap(geoData) {
 }
 
 function updateGeoLayer(covidLookup, maxCasesForDataset, focusDayIndex) {
-	if (geoLayer == null) return;
+	if (geoLayer == null || maxCasesForDataset <= 0 || focusDayIndex == -1) return;
 
 	// Divide maxCasesForDataset into series of n intervals
 	// n = number of regionColors excluding "unknown" and "zero"
@@ -137,9 +145,7 @@ function updateMapFocus(region) {
 }
 
 function updateLegend(maxCasesForDataset) {
-	if (map == null || maxCasesForDataset == null) {
-		return null;
-	}
+	if (map == null || maxCasesForDataset == null) return;
 
 	// Remove existing legend
 	if (legend) legend.remove();

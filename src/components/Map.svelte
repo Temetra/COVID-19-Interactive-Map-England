@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from "svelte";
-	import "../modules/map.js";
+	import { createMap } from "../modules/map.js";
+	let mapElement;
+	onMount(() => createMap(mapElement));
 </script>
 
 <style type="text/scss">
@@ -10,19 +12,19 @@
 		grid-area:map;
 	}
 
-	#leaflet_ele {
+	section > div {
 		width:100%;
 		height:100%;
 		border-radius:1rem;
 	}
 
 	@include breakpoint-min(stacked) {
-		#leaflet_ele {
+		section > div {
 			border-radius:1rem 0 0 1rem;
 		}
 	}
 </style>
 
 <section>
-	<div id="leaflet_ele"></div>
+	<div bind:this={mapElement}></div>
 </section>

@@ -3,6 +3,9 @@ import { writable, derived } from "svelte/store";
 // Counties and Unitary Authorities boundary data
 export const geoData = writable();
 
+// Estimated population data for mid-2018
+export const popData = writable();
+
 // Merged COVID-19 number of cases in England data
 export const covidDays = writable([]);
 export const covidSummary = writable({});
@@ -27,7 +30,7 @@ export const maxCasesForDataset = derived(covidRegions, regions => getMaxCasesFo
 export const covidLookup = derived(covidRegions, regions => getLookupTable(regions));
 
 // Derived store for triggering map component updates
-export const geoLayerSource = derived([covidLookup, maxCasesForDataset, focusDayIndex], data => data);
+export const geoLayerSource = derived([geoData, covidLookup, maxCasesForDataset, focusDayIndex], data => data);
 
 // Reset focusDay when covidDays changes
 covidDays.subscribe(d => {
