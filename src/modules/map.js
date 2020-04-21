@@ -5,7 +5,7 @@ import { geoData, focusRegion, maxCasesForDataset, geoLayerSource } from "../sto
 const center = { lat: 52.914639, lon: -1.47189 }
 const zoom = 7;
 const focusZoom = 9;
-const showTiles = false;
+const showTiles = true;
 const regionColors = [
 	"region-unknown",
 	"region-zero",
