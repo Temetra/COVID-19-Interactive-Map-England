@@ -14,17 +14,25 @@
 		return key.toUpperCase().includes((filter || "").toUpperCase());
 	};
 
-	let itemReducer = (result, [name, item]) => {
+	let itemGrouper = (result, [name, item]) => {
+		// Get first letter
 		let prefix = name[0];
+
+		// Add to existing object key array, or create new
 		if (prefix in result) result[prefix].push({ name, item });
 		else result[prefix] = [{ name, item }];
+
+		// Return object
 		return result;
 	};
 
 	$: {
+		// Filter regions by user input
+		// Then group by first letter
+		// Assumes covidRegions is alphabetically sorted
 		filteredItems = Object.entries($covidRegions)
-			.filter(([key, _]) => keyFilter(key, $filterRegion))
-			.reduce(itemReducer, {});
+			.filter(([regionName, _]) => keyFilter(regionName, $filterRegion))
+			.reduce(itemGrouper, {});
 	}
 </script>
 
