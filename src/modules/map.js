@@ -1,15 +1,37 @@
 // Leaflet manipulation module for Map.svelte
+import { geoData, focusRegion, maxCasesForDataset, geoLayerSource } from "../stores/datastore.js";
 
 // Settings
 const center = { lat: 52.914639, lon: -1.47189 }
 const zoom = 7;
 const focusZoom = 9;
-const showTiles = true;
+const showTiles = false;
+const regionColors = [
+	"region-unknown",
+	"region-zero",
+	"region-one",
+	"region-two",
+	"region-three",
+	"region-four",
+	"region-five",
+];
 
 // Variables
 let map, legend, tileLayer, geoLayer;
 
-export function initialiseMap(geoData) {
+// Create map when geodata is loaded
+geoData.subscribe(data => initialiseMap(data));
+
+// Update legend
+maxCasesForDataset.subscribe(maxCases => updateLegend(maxCases));
+
+// Update geo layer
+geoLayerSource.subscribe(([lookup, maxCases, focusDay]) => updateGeoLayer(lookup, maxCases, focusDay));
+
+// Pan and zoom if region selected
+focusRegion.subscribe(region => updateMapFocus(region));
+
+function initialiseMap(geoData) {
 	if (map != null || geoData == null) return;
 
 	// Create map
@@ -53,8 +75,12 @@ export function initialiseMap(geoData) {
 	geoLayer.addTo(map);
 }
 
-export function updateGeoLayer(maxCasesForDataset, covidLookup, focusDayIndex) {
+function updateGeoLayer(covidLookup, maxCasesForDataset, focusDayIndex) {
 	if (geoLayer == null) return;
+
+	// Divide maxCasesForDataset into series of n intervals
+	// n = number of regionColors excluding "unknown" and "zero"
+	let colorNumbers = generateColorIntervals(maxCasesForDataset);
 
 	// Update all geojson features
 	for (let layer of Object.values(geoLayer._layers)) {
@@ -62,9 +88,13 @@ export function updateGeoLayer(maxCasesForDataset, covidLookup, focusDayIndex) {
 		let data = covidLookup[layer.feature.properties.ctyua19cd];
 		let count = data ? data.Cases[focusDayIndex] : null;
 
-		// Update SVG attributes and set casesCount
+		// Find regionColor css class by checking case count against intervals
+		var idx = colorNumbers.findIndex(x => (count == null) || (count < x));
+		var regionColor = idx > -1 ? regionColors[idx] : regionColors[regionColors.length-1];
+
+		// Update SVG attributes
 		layer._path.setAttribute("fill-opacity", 1.0);
-		layer._path.setAttribute("class", "leaflet-interactive " + getRegionColour(count, maxCasesForDataset));
+		layer._path.setAttribute("class", "leaflet-interactive " + regionColor);
 
 		// Set case count for day
 		layer.feature.properties.casesCount = count;
@@ -83,7 +113,7 @@ export function updateGeoLayer(maxCasesForDataset, covidLookup, focusDayIndex) {
 	}
 }
 
-export function updateMapFocus(region) {
+function updateMapFocus(region) {
 	if (map == null) return;
 
 	if (region && region.length > 0) {
@@ -106,7 +136,7 @@ export function updateMapFocus(region) {
 	}
 }
 
-export function updateLegend(maxCasesForDataset) {
+function updateLegend(maxCasesForDataset) {
 	if (map == null || maxCasesForDataset == null) {
 		return null;
 	}
@@ -151,19 +181,8 @@ function showFeaturePopup(latlng, layer) {
 	layer.openPopup(latlng);
 }
 
-const regionColors = [
-	"region-unknown",
-	"region-zero",
-	"region-one",
-	"region-two",
-	"region-three",
-	"region-four",
-	"region-five",
-];
-
-const colors_arr = Array(regionColors.length-2);
-
-function generateColorNumbers(max) {
+function generateColorIntervals(max) {
+	const colors_arr = Array(regionColors.length-2);
 	return [0, ...Array.from(colors_arr, (_, x) => Math.ceil(max/(regionColors.length-2)*x+1))];
 }
 
@@ -171,7 +190,7 @@ function listRegionColors(max) {
 	if (max == 0) return [];
 
 	// Get range of starting values
-	let starting = generateColorNumbers(max);
+	let starting = generateColorIntervals(max);
 	
 	// Create range of ending values
 	let ending = starting.map(q => q - 1);
@@ -188,20 +207,4 @@ function listRegionColors(max) {
 			color: regionColors[idx]
 		};
 	});
-}
-
-function getRegionColour(count, max) {
-	// Default colour for a null case count
-	if (count == null) return regionColors[0];
-
-	// Generate range of n numbers, from 0 to max
-	let nums = generateColorNumbers(max);
-
-	// Find the first colour that fits the count
-	for (let x = nums.length; x >= 0; x--) {
-		if (count >= nums[x]) {
-			// +1 to skip 'unknown' value
-			return regionColors[x + 1];
-		}
-	}
 }

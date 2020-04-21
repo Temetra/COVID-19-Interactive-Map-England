@@ -23,11 +23,15 @@ export const focusDayIndex = derived([focusDay, covidDays], ([$focusDay, $covidD
 // Derived statistic for colouring regions
 export const maxCasesForDataset = derived(covidRegions, $covidRegions => getMaxCasesForDataset($covidRegions));
 
-// Derived statistic for colouring regions
-export const maxCasesForDay = derived([covidRegions, focusDayIndex], ([$covidRegions, $focusDayIndex]) => getMaxCasesForDay($covidRegions, $focusDayIndex));
-
 // Derived lookup table for regions based on code
+// { "Exxxxxxxx": { Name: "ABC", Cases: [0..n] }, ... }
 export const covidLookup = derived(covidRegions, $covidRegions => getLookupTable($covidRegions));
+
+// Derived store for triggering map component updates
+export const geoLayerSource = derived(
+	[covidLookup, maxCasesForDataset, focusDayIndex],
+	([$covidLookup, $maxCasesForDataset, $focusDayIndex]) => [$covidLookup, $maxCasesForDataset, $focusDayIndex]
+);
 
 // Reset focusDay when covidDays changes
 covidDays.subscribe(d => {
@@ -48,12 +52,5 @@ function getMaxCasesForDataset(covidRegions) {
 		return data.Cases.reduce((prev, curr) => {
 			return Math.max(prev, curr);
 		}, subtotal);
-	}, 0);
-}
-
-// Finds the highest number of cases for a specific day
-function getMaxCasesForDay(covidRegions, day) {
-	return Object.values(covidRegions).reduce((subtotal, data) => {
-		return Math.max(subtotal, data.Cases[day]);
 	}, 0);
 }
