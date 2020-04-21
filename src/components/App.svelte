@@ -1,12 +1,12 @@
 <script>
 	import { onMount } from "svelte";
+	import { fetchData } from "../modules/fetch-data.js";
 	import Header from "./Header.svelte";
 	import Map from "./Map.svelte";
 	import Controls from "./Controls.svelte";
 	import Summary from "./Summary.svelte";
 	import FlowTable from "./FlowTable.svelte";
 	import Footer from "./Footer.svelte";
-	import { fetchData } from "../modules/fetch-data.js";
 	onMount(fetchData);
 </script>
 
