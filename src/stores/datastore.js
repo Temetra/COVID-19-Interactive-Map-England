@@ -18,20 +18,16 @@ export const focusRegion = writable();
 export const filterRegion = writable();
 
 // Derived index of selected day to focus on
-export const focusDayIndex = derived([focusDay, covidDays], ([$focusDay, $covidDays]) => $covidDays.indexOf($focusDay));
+export const focusDayIndex = derived([covidDays, focusDay], ([days, focus]) => days.indexOf(focus));
 
 // Derived statistic for colouring regions
-export const maxCasesForDataset = derived(covidRegions, $covidRegions => getMaxCasesForDataset($covidRegions));
+export const maxCasesForDataset = derived(covidRegions, regions => getMaxCasesForDataset(regions));
 
 // Derived lookup table for regions based on code
-// { "Exxxxxxxx": { Name: "ABC", Cases: [0..n] }, ... }
-export const covidLookup = derived(covidRegions, $covidRegions => getLookupTable($covidRegions));
+export const covidLookup = derived(covidRegions, regions => getLookupTable(regions));
 
 // Derived store for triggering map component updates
-export const geoLayerSource = derived(
-	[covidLookup, maxCasesForDataset, focusDayIndex],
-	([$covidLookup, $maxCasesForDataset, $focusDayIndex]) => [$covidLookup, $maxCasesForDataset, $focusDayIndex]
-);
+export const geoLayerSource = derived([covidLookup, maxCasesForDataset, focusDayIndex], data => data);
 
 // Reset focusDay when covidDays changes
 covidDays.subscribe(d => {
@@ -39,18 +35,20 @@ covidDays.subscribe(d => {
 });
 
 // Creates a region code lookup table for case data
+// { "Exxxxxxxx": { Name: "ABC", Cases: [0..n] }, ... }
 function getLookupTable(covidRegions) {
 	return Object.entries(covidRegions).reduce((table, [name, data]) => {
-		let fragment = data.Codes.reduce((frag, code) => ({...frag, [code]:{ Name:name, Cases:data.Cases } }), {});
-		return { ...table, ...fragment };
+		// Create an item entry for each code a region has
+		for (let code of data.Codes) {
+			table[code] = { Name:name, Cases:data.Cases };
+		}
+		return table;
 	}, {});
 }
 
 // Finds the highest number of cases over the entire dataset
 function getMaxCasesForDataset(covidRegions) {
 	return Object.values(covidRegions).reduce((subtotal, data) => {
-		return data.Cases.reduce((prev, curr) => {
-			return Math.max(prev, curr);
-		}, subtotal);
+		return data.Cases.reduce((prev, curr) => curr > prev ? curr : prev, subtotal);
 	}, 0);
 }
