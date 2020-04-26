@@ -148,6 +148,6 @@ function createPopupContent(layer) {
 
 function showFeaturePopup(latlng, layer) {
 	let content = createPopupContent(layer);
-	layer.bindPopup(content, { className:"region-popup" }).addTo(map);
+	layer.bindPopup(content, { className:"region-popup", closeOnClick:false }).addTo(map);
 	layer.openPopup(latlng);
 }
