@@ -22,18 +22,18 @@ covidDays.subscribe(d => {
 export const focusDayIndex = derived([covidDays, focusDay], ([days, focus]) => days.indexOf(focus));
 
 // Map stores
-export const mapLookup = writable(new RegionDataLookup());
-export const mapMaximums = writable();
 export const mapMode = writable("perPop");
+export const mapLookup = writable();
+export const mapMaximums = writable();
 
 export const mapIntervals = derived([mapMode, mapMaximums], ([mode, maximums]) => {
 	if (maximums && mode in maximums) return maximums[mode].getIntervals();
 	else return new MapIntervals(0);
 });
 
-export const mapLookupFunc = derived([mapMode, mapLookup, mapIntervals], ([mode, lookup, intervals]) => {
-	if (lookup) return getLookupFunc(mode, lookup, intervals);
-	else defaultLookupFunc;
+export const mapLookupFunc = derived([mapMode, mapLookup, mapMaximums], ([mode, lookup, maximums]) => {
+	if (maximums && lookup && Object.keys(lookup.table).length > 0) return getLookupFunc(mode, lookup, maximums);
+	else return defaultLookupFunc;
 });
 
 // Get the error result from CaseCount.valueAt()
@@ -47,14 +47,15 @@ function defaultLookupFunc() {
 // Returns an arrow function based on mode
 // Function takes LAD code and day index
 // Result merges region data, and style from interval
-function getLookupFunc(mode, lookup, intervals) {
+function getLookupFunc(mode, lookup, maximums) {
 	return (code, idx) => {
 		// Get data for code and day
 		let data = lookup.data(code, idx);
 
 		// If data has value for mode return object
-		if (mode in data) {
-			return { ...data, style: intervals.getStyle(data[mode]) };
+		if (data && mode in data && mode in maximums) {
+			let style = maximums[mode].getIntervals().getStyle(data[mode]);
+			return { ...data, style };
 		}
 		else {
 			// Otherwise return default object
