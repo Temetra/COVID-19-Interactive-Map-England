@@ -84,6 +84,7 @@ export function updateGeoLayer(mapLookupFunc, focusDayIndex) {
 
 		// Set case count for day
 		layer.feature.properties.casesCount = data.raw;
+		layer.feature.properties.casesCountPerPop = data.perPop;
 
 		// Add merged authority name if different from feature name
 		if (data && layer.feature.properties.ctyua19nm != data.name) {
@@ -127,10 +128,22 @@ function createPopupContent(layer) {
 	// Get data from layer
 	let authority = layer.feature.properties.mergedAuthority || layer.feature.properties.ctyua19nm;
 	let count = layer.feature.properties.casesCount;
+	let perPop = layer.feature.properties.casesCountPerPop;
 
 	// Create content
-	return count == null ? `${authority}<br/>No data` : 
-		`${authority}<br/>${count} case${count == 1 ? "" : "s"}`;
+	if (count == null) {
+		return `
+		<span>${authority}</span>
+		<br/>No data
+		`;
+	}
+	else {
+		return `
+		<span>${authority}</span>
+		<br/>${count} case${count == 1 ? "" : "s"}
+		<br/>${+perPop.toFixed(2)} per 10,000 people
+		`;
+	}
 }
 
 function showFeaturePopup(latlng, layer) {

@@ -110,4 +110,8 @@ path {
 		filter:drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.5));
 		box-shadow:none;
 	}
+
+	.leaflet-popup-content span {
+		font-weight:bold;
+	}
 }
