@@ -36,23 +36,23 @@ h2 {
 }
 
 // Regional map colours
-$color-regional-unknown:rgb(223, 223, 223);
-$color-regional-zero:rgb(86, 228, 86);
-$color-regional-one:rgb(255, 255, 0);
-$color-regional-two:rgb(255, 191, 0);
-$color-regional-three:rgb(255, 127, 0);
-$color-regional-four:rgb(255, 63, 0);
-$color-regional-five:rgb(255, 0, 0);
+$colour-regional-unknown:rgb(223, 223, 223);
+$colour-regional-zero:rgb(86, 228, 86);
+$colour-regional-one:rgb(255, 255, 0);
+$colour-regional-two:rgb(255, 191, 0);
+$colour-regional-three:rgb(255, 127, 0);
+$colour-regional-four:rgb(255, 63, 0);
+$colour-regional-five:rgb(255, 0, 0);
 
 // Map SVG colouring
 path {
-	&.region-unknown { fill:$color-regional-unknown; }
-	&.region-zero { fill:$color-regional-zero; }
-	&.region-one { fill:$color-regional-one; }
-	&.region-two { fill:$color-regional-two; }
-	&.region-three { fill:$color-regional-three; }
-	&.region-four { fill:$color-regional-four; }
-	&.region-five { fill:$color-regional-five; }
+	&.region-unknown { fill:$colour-regional-unknown; }
+	&.region-zero { fill:$colour-regional-zero; }
+	&.region-one { fill:$colour-regional-one; }
+	&.region-two { fill:$colour-regional-two; }
+	&.region-three { fill:$colour-regional-three; }
+	&.region-four { fill:$colour-regional-four; }
+	&.region-five { fill:$colour-regional-five; }
 }
 
 // Set map overlay pane to blend
@@ -75,7 +75,7 @@ path {
 		display:flex;
 		align-items:center;
 		
-		.color {
+		.colour {
 			width:1rem;
 			height:1rem;
 			border:solid 1px #aaa;
@@ -89,13 +89,13 @@ path {
 				opacity:0.5;
 			}
 
-			&.region-unknown div { background-color:$color-regional-unknown; }
-			&.region-zero div { background-color:$color-regional-zero; }
-			&.region-one div { background-color:$color-regional-one; }
-			&.region-two div { background-color:$color-regional-two; }
-			&.region-three div { background-color:$color-regional-three; }
-			&.region-four div { background-color:$color-regional-four; }
-			&.region-five div { background-color:$color-regional-five; }
+			&.region-unknown div { background-color:$colour-regional-unknown; }
+			&.region-zero div { background-color:$colour-regional-zero; }
+			&.region-one div { background-color:$colour-regional-one; }
+			&.region-two div { background-color:$colour-regional-two; }
+			&.region-three div { background-color:$colour-regional-three; }
+			&.region-four div { background-color:$colour-regional-four; }
+			&.region-five div { background-color:$colour-regional-five; }
 		}
 	
 		.label {

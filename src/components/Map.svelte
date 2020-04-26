@@ -1,8 +1,22 @@
 <script>
 	import { onMount } from "svelte";
-	import { createMap } from "../modules/map.js";
+	import { geoData, mapLookupFunc, focusDayIndex, focusRegion } from "../stores/datastore.js";
+	import { createMap, addGeoData, updateGeoLayer, updateMapFocus } from "../modules/map.js";
+	
+	// Container element for Leaflet
 	let mapElement;
+	
+	// Create Leaflet map when component mounts
 	onMount(() => createMap(mapElement));
+
+	// Add GeoJson when loaded
+	$: addGeoData($geoData);
+
+	// Update Geo layer
+	$: updateGeoLayer($mapLookupFunc, $focusDayIndex);
+
+	// Focus on region
+	$: updateMapFocus($focusRegion);
 </script>
 
 <style type="text/scss">

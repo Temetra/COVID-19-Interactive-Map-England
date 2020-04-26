@@ -1,38 +1,16 @@
 // Leaflet manipulation module for Map.svelte
-import { geoData, focusRegion, maxCasesForDataset, geoLayerSource } from "../stores/datastore.js";
+import Legend from "../components/Legend.svelte";
 
 // Settings
 const center = { lat: 52.914639, lon: -1.47189 }
 const zoom = 7;
 const focusZoom = 9;
 const showTiles = true;
-const regionColors = [
-	"region-unknown",
-	"region-zero",
-	"region-one",
-	"region-two",
-	"region-three",
-	"region-four",
-	"region-five",
-];
 
 // Variables
 let map, legend, tileLayer, geoLayer;
 
-// Add geodata to map
-geoData.subscribe(data => addGeoLayer(data));
-
-// Update legend
-maxCasesForDataset.subscribe(maxCases => updateLegend(maxCases));
-
-// Update geo layer
-geoLayerSource.subscribe(([geoData, lookup, maxCases, focusDay]) => {
-	updateGeoLayer(lookup, maxCases, focusDay);
-});
-
-// Pan and zoom if region selected
-focusRegion.subscribe(region => updateMapFocus(region));
-
+// Map initialisation
 export function createMap(mapElement) {
 	// Only create map once
 	if (map != null) return;
@@ -57,9 +35,16 @@ export function createMap(mapElement) {
 
 	// Dev option to avoid spamming service requests
 	if (showTiles) tileLayer.addTo(map);
+
+	// Create legend
+	let leafletLegend = L.control({position: "topright"});
+	leafletLegend.onAdd = () => L.DomUtil.create("div", "info legend");
+	leafletLegend.addTo(map);
+	legend = new Legend({ target: leafletLegend._container });
 }
 
-function addGeoLayer(geoData) {
+// Add GeoJson to map
+export function addGeoData(geoData) {
 	// Only create if map and data exist
 	if (map == null || geoData == null) return;
 
@@ -83,33 +68,26 @@ function addGeoLayer(geoData) {
 	geoLayer.addTo(map);
 }
 
-function updateGeoLayer(covidLookup, maxCasesForDataset, focusDayIndex) {
-	if (geoLayer == null || maxCasesForDataset <= 0 || focusDayIndex == -1) return;
-
-	// Divide maxCasesForDataset into series of n intervals
-	// n = number of regionColors excluding "unknown" and "zero"
-	let colorNumbers = generateColorIntervals(maxCasesForDataset);
+// Update GeoJson layer
+export function updateGeoLayer(mapLookupFunc, focusDayIndex) {
+	// Check state
+	if (geoLayer == null || focusDayIndex == -1) return;
 
 	// Update all geojson features
 	for (let layer of Object.values(geoLayer._layers)) {
-		// Get data for feature
-		let data = covidLookup[layer.feature.properties.ctyua19cd];
-		let count = data ? data.Cases[focusDayIndex] : null;
-
-		// Find regionColor css class by checking case count against intervals
-		var idx = colorNumbers.findIndex(x => (count == null) || (count < x));
-		var regionColor = idx > -1 ? regionColors[idx] : regionColors[regionColors.length-1];
+		let code = layer.feature.properties.ctyua19cd;
+		let data = mapLookupFunc(code, focusDayIndex);
 
 		// Update SVG attributes
 		layer._path.setAttribute("fill-opacity", 1.0);
-		layer._path.setAttribute("class", "leaflet-interactive " + regionColor);
+		layer._path.setAttribute("class", "leaflet-interactive " + data.style);
 
 		// Set case count for day
-		layer.feature.properties.casesCount = count;
+		layer.feature.properties.casesCount = data.raw;
 
 		// Add merged authority name if different from feature name
-		if (data && layer.feature.properties.ctyua19nm != data.Name) {
-			layer.feature.properties.mergedAuthority = data.Name;
+		if (data && layer.feature.properties.ctyua19nm != data.name) {
+			layer.feature.properties.mergedAuthority = data.name;
 		}
 
 		// Update popup
@@ -121,7 +99,8 @@ function updateGeoLayer(covidLookup, maxCasesForDataset, focusDayIndex) {
 	}
 }
 
-function updateMapFocus(region) {
+// Zoom on a region, or reset view
+export function updateMapFocus(region) {
 	if (map == null) return;
 
 	if (region && region.length > 0) {
@@ -144,33 +123,6 @@ function updateMapFocus(region) {
 	}
 }
 
-function updateLegend(maxCasesForDataset) {
-	if (map == null || maxCasesForDataset == null) return;
-
-	// Remove existing legend
-	if (legend) legend.remove();
-
-	// Create control
-	legend = L.control({position: "topright"});
-
-	// Add content when added to map
-	legend.onAdd = () => {
-		let div = L.DomUtil.create("div", "info legend");
-		
-		for (let item of listRegionColors(maxCasesForDataset)) {
-			div.innerHTML += `<div class="keyitem">
-				<div class="color ${item.color}"><div></div></div>
-				<div class="label">${item.label}</div>
-			</div>`;
-		}
-
-		return div;
-	};
-
-	// Add to map
-	legend.addTo(map);
-}
-
 function createPopupContent(layer) {
 	// Get data from layer
 	let authority = layer.feature.properties.mergedAuthority || layer.feature.properties.ctyua19nm;
@@ -185,32 +137,4 @@ function showFeaturePopup(latlng, layer) {
 	let content = createPopupContent(layer);
 	layer.bindPopup(content, { className:"region-popup" }).addTo(map);
 	layer.openPopup(latlng);
-}
-
-function generateColorIntervals(max) {
-	const colors_arr = Array(regionColors.length-2);
-	return [0, ...Array.from(colors_arr, (_, x) => Math.ceil(max/(regionColors.length-2)*x+1))];
-}
-
-function listRegionColors(max) {
-	if (max == 0) return [];
-
-	// Get range of starting values
-	let starting = generateColorIntervals(max);
-	
-	// Create range of ending values
-	let ending = starting.map(q => q - 1);
-	ending.shift(); // remove first value
-	ending.push(max); // add max to end
-
-	// Create labels
-	let labels = ["Unknown", ...starting.map((val, idx) => idx == 0 ? "0 cases" : `${val}-${ending[idx]} cases`)];
-
-	// Create array of key/value objects
-	return labels.map((label, idx) => {
-		return { 
-			label,
-			color: regionColors[idx]
-		};
-	});
 }
