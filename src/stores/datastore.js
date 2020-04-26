@@ -32,7 +32,7 @@ export const mapIntervals = derived([mapMode, mapMaximums], ([mode, maximums]) =
 });
 
 export const mapLookupFunc = derived([mapMode, mapLookup, mapMaximums], ([mode, lookup, maximums]) => {
-	if (maximums && lookup && Object.keys(lookup.table).length > 0) return getLookupFunc(mode, lookup, maximums);
+	if (maximums && mode in maximums && lookup && Object.keys(lookup.table).length > 0) return getLookupFunc(mode, lookup, maximums);
 	else return defaultLookupFunc;
 });
 
@@ -48,13 +48,15 @@ function defaultLookupFunc() {
 // Function takes LAD code and day index
 // Result merges region data, and style from interval
 function getLookupFunc(mode, lookup, maximums) {
+	let intervals = maximums[mode].getIntervals();
+
 	return (code, idx) => {
 		// Get data for code and day
 		let data = lookup.data(code, idx);
 
 		// If data has value for mode return object
-		if (data && mode in data && mode in maximums) {
-			let style = maximums[mode].getIntervals().getStyle(data[mode]);
+		if (data && mode in data) {
+			let style = intervals.getStyle(data[mode]);
 			return { ...data, style };
 		}
 		else {
