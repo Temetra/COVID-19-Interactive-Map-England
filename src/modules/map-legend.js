@@ -117,17 +117,6 @@ export class MapIntervals {
 		if (magnitude > 1) this.size = Math.round(this.size / magnitude) * magnitude;
 	}
 
-	getRangeByIndex(k) {
-		let values = this.getDescription(k, this.size);
-		let style = this.styles[k];
-		return { values, style };
-	}
-
-	getRange(value) {
-		let k = this.getInterval(value, this.size);
-		return this.getRangeByIndex(k);
-	}
-
 	getStyle(value) {
 		let k = this.getInterval(value, this.size);
 		return this.styles[k];
@@ -136,7 +125,9 @@ export class MapIntervals {
 	* [Symbol.iterator]() {
 		if (this.size > 0) {
 			for (let k = 0; k < this.styles.length; k++) {
-				yield this.getRangeByIndex(k);
+				let values = this.getDescription(k, this.size);
+				let style = this.styles[k];
+				yield { values, style };
 			}
 		}
 	}
