@@ -5,6 +5,8 @@ import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
 import babel from "rollup-plugin-babel";
+import serve from "rollup-plugin-serve";
+import livereload from "rollup-plugin-livereload";
 
 const production = !process.env.ROLLUP_WATCH;
 const emitSourcemaps = false;
@@ -47,6 +49,15 @@ export default {
 
 		// Convert CommonJS modules to ES6
 		commonjs(),
+
+		// Dev host
+		!production && serve({
+			open: true,
+			contentBase: "public",
+			port: 5000
+		}),
+
+		!production && livereload(),
 
 		// Transpile
 		production && babel({
