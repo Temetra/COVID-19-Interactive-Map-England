@@ -5,10 +5,11 @@ const defaultStyles = [
 	"region-two",
 	"region-three",
 	"region-four",
-	"region-five"
+	"region-five",
+	"region-six"
 ];
 
-const defaultIntervals = 5;
+const defaultIntervals = 6;
 
 // Value-based intervals start from 2
 // region-unknown and region-zero are special cases
