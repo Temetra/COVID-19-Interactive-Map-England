@@ -1,5 +1,5 @@
 // Leaflet manipulation module for Map.svelte
-import Legend from "../components/Legend.svelte";
+import Legend from "~/mapping/Legend.svelte";
 
 // Settings
 const center = { lat: 52.914639, lon: -1.47189 }

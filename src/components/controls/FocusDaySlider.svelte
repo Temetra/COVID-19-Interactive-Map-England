@@ -1,5 +1,5 @@
 <script>
-	import { focusDay, focusDayIndex, covidDays } from "../stores/datastore.js";
+	import { focusDay, focusDayIndex, covidDays } from "~/stores/datastore.js";
 
 	const dtf = new Intl.DateTimeFormat("en-GB", { weekday: "short", year: "numeric", month: "long", day: "numeric" });
 
@@ -12,10 +12,14 @@
 	let changeDay = (event) => {
 		focusDay.set($covidDays[event.target.value]);
 	};
+
+	let getMaxDays = (count) => {
+		return (count > 0) ? count - 1 : 0;
+	};
 </script>
 
 <style type="text/scss">
-	@import "../scss/shared";
+	@import "shared";
 
 	section {
 		grid-area:slider;
@@ -41,7 +45,7 @@
 	<h2>{formattedDate}</h2>
 	<input type="range" 
 		min="0" 
-		max={$covidDays.length-1} 
+		max={getMaxDays($covidDays.length-1)} 
 		value={$focusDayIndex}
 		on:input={changeDay}>
 </section>

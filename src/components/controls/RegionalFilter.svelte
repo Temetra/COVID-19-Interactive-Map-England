@@ -1,11 +1,11 @@
 <script>
-	import { filterRegion } from "../stores/datastore.js";
+	import { filterRegion } from "~/stores/datastore.js";
 
 	let resetFilter = () => filterRegion.set("");
 </script>
 
 <style type="text/scss">
-	@import "../scss/shared";
+	@import "shared";
 
 	section {
 		grid-area:filter;

@@ -1,5 +1,15 @@
 <script>
-	import { focusDay, focusDayIndex, focusRegion, covidDays, filterRegion, covidSummary, covidRegions } from "../stores/datastore.js";
+	import { 
+		focusDay, 
+		focusDayIndex, 
+		focusRegion, 
+		covidDays, 
+		filterRegion, 
+		covidSummary, 
+		covidRegions 
+	}
+	from "~/stores/datastore.js";
+	
 	import FlowTableHeading from "./FlowTableHeading.svelte";
 	import FlowTableItem from "./FlowTableItem.svelte";
 
@@ -37,7 +47,7 @@
 </script>
 
 <style type="text/scss">
-	@import "../scss/shared";
+	@import "shared";
 
 	section {
 		grid-area:data;

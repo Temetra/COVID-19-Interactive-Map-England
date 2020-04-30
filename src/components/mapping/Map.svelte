@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from "svelte";
-	import { geoData, mapLookupFunc, focusDayIndex, focusRegion } from "../stores/datastore.js";
-	import { createMap, addGeoData, updateGeoLayer, updateMapFocus } from "../modules/map.js";
+	import { geoData, mapLookupFunc, focusDayIndex, focusRegion } from "~/stores/datastore.js";
+	import { createMap, addGeoData, updateGeoLayer, updateMapFocus } from "~/modules/map.js";
 	
 	// Container element for Leaflet
 	let mapElement;
@@ -20,7 +20,7 @@
 </script>
 
 <style type="text/scss">
-	@import "../scss/shared";
+	@import "shared";
 
 	section {
 		grid-area:map;

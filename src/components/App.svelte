@@ -1,17 +1,17 @@
 <script>
 	import { onMount } from "svelte";
-	import { fetchData } from "../modules/fetch-data.js";
-	import Header from "./Header.svelte";
-	import Map from "./Map.svelte";
-	import Controls from "./Controls.svelte";
-	import Summary from "./Summary.svelte";
-	import FlowTable from "./FlowTable.svelte";
-	import Footer from "./Footer.svelte";
+	import { fetchData } from "~/modules/fetch-data.js";
+	import Header from "~/Header.svelte";
+	import Footer from "~/Footer.svelte";
+	import Map from "~/mapping/Map.svelte";
+	import Controls from "~/controls/Controls.svelte";
+	import Summary from "~/table/Summary.svelte";
+	import FlowTable from "~/table/FlowTable.svelte";
 	onMount(fetchData);
 </script>
 
 <style type="text/scss">
-	@import "../scss/shared";
+	@import "shared";
 
 	.container {
 		display:grid;

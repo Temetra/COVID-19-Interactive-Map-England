@@ -1,5 +1,5 @@
 import { writable, derived } from "svelte/store";
-import { MapIntervals, RegionData, RegionDataLookup } from "../modules/map-legend.js";
+import { MapIntervals, RegionData } from "~/modules/map-legend.js";
 
 // Fetched data
 export const geoData = writable(); // Counties and Unitary Authorities boundary data

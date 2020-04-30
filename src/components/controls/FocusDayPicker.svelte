@@ -1,5 +1,5 @@
 <script>
-	import { focusDay, covidDays } from "../stores/datastore.js";
+	import { focusDay, covidDays } from "~/stores/datastore.js";
 
 	let changeDay = (event) => {
 		focusDay.set(event.target.value);
@@ -7,7 +7,7 @@
 </script>
 
 <style type="text/scss">
-	@import "../scss/shared";
+	@import "shared";
 
 	section {
 		grid-area:picker;

@@ -1,4 +1,13 @@
-import { geoData, popData, covidDays, covidSummary, covidRegions, mapLookup, mapMaximums } from "../stores/datastore.js";
+import { 
+	geoData, 
+	popData, 
+	covidDays, 
+	covidSummary, 
+	covidRegions, 
+	mapLookup, 
+	mapMaximums 
+} 
+from "~/stores/datastore.js";
 import { RegionDataLookup, MaxCases } from "./map-legend.js";
 
 export async function fetchData() {
