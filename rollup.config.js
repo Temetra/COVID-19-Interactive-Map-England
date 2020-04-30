@@ -3,8 +3,8 @@ import autoPreprocess from "svelte-preprocess";
 import scss from "rollup-plugin-scss";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import babel from "@rollup/plugin-babel";
 import { terser } from "rollup-plugin-terser";
-import babel from "rollup-plugin-babel";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 
@@ -61,10 +61,10 @@ export default {
 
 		// Transpile
 		production && babel({
-			presets: ["@babel/preset-env"],
-			plugins: ["@babel/transform-runtime"],
-			exclude: "node_modules/**",
-			runtimeHelpers: true
+			presets: [["@babel/preset-env"]],
+			plugins: ["@babel/plugin-transform-runtime"],
+			extensions:[".js", ".jsx", ".es6", ".es", ".mjs", ".svelte"],
+			babelHelpers:"runtime"
 		}),
 
 		// Minify generated bundle if in production mode
