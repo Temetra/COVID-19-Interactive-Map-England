@@ -12,7 +12,14 @@ import livereload from "rollup-plugin-livereload";
 
 const production = !process.env.ROLLUP_WATCH;
 const emitSourcemaps = !production;
-const scssPath = path.resolve(__dirname, "src/scss/");
+
+// Paths used for alias replacement
+const paths = {
+	scss: path.resolve(__dirname, "src/scss"),
+	stores: path.resolve(__dirname, "src/stores"),
+	modules: path.resolve(__dirname, "src/modules"),
+	components: path.resolve(__dirname, "src/components"),
+};
 
 export default {
 	input: "src/main.js",
@@ -25,13 +32,32 @@ export default {
 		name: "app",
 	},
 	plugins: [
+		// Import aliases
+		alias({
+			resolve: [".svelte", ".js"],
+			entries: [
+				{ find: /~\/styles\//, replacement: paths.scss + "/" },
+				{ find: /~\/stores\//, replacement: paths.stores + "/" },
+				{ find: /~\/modules\//, replacement: paths.modules + "/" },
+				{ find: /^~\//, replacement: paths.components + "/" },
+			]
+		}),
+
+		// Locates modules using the Node resolution algorithm
+		resolve({
+			// Some package.json files have a "browser" field which specifies alternative files to load for people bundling for the browser
+			browser: true,
+			// Prevent bundling the same package multiple times 
+			dedupe: ["svelte"]
+		}),
+
 		// Compile Svelte components
 		svelte({
 			dev: !production,
 			// Processes SCSS embedded within Svelte files
 			preprocess: autoPreprocess({
 				scss: {
-					includePaths: [scssPath],
+					includePaths: [paths.scss],
 					sourceMap: emitSourcemaps,
 				}
 			}),
@@ -44,25 +70,6 @@ export default {
 			output: "public/bundle.css",
 			outputStyle: production ? "compressed" : "",
 			sourceMap: emitSourcemaps,
-		}),
-
-		// Import aliases
-		alias({
-			resolve: [".svelte", ".js"],
-			entries: [
-				{ find: "~/styles", replacement: scssPath },
-				{ find: "~/stores", replacement: path.resolve(__dirname, "src/stores") },
-				{ find: "~/modules", replacement: path.resolve(__dirname, "src/modules") },
-				{ find: "~", replacement: path.resolve(__dirname, "src/components") },
-			]
-		}),
-
-		// Locates modules using the Node resolution algorithm
-		resolve({
-			// Some package.json files have a "browser" field which specifies alternative files to load for people bundling for the browser
-			browser: true,
-			// Prevent bundling the same package multiple times 
-			dedupe: ["svelte"]
 		}),
 
 		// Convert CommonJS modules to ES6
