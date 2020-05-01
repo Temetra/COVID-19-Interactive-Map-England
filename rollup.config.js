@@ -12,14 +12,7 @@ import livereload from "rollup-plugin-livereload";
 
 const production = !process.env.ROLLUP_WATCH;
 const emitSourcemaps = !production;
-
-// Paths used for alias replacement
-const paths = {
-	scss: path.resolve(__dirname, "src/scss"),
-	stores: path.resolve(__dirname, "src/stores"),
-	modules: path.resolve(__dirname, "src/modules"),
-	components: path.resolve(__dirname, "src/components"),
-};
+const pathTo = (subdir) => path.resolve(__dirname, "src", subdir) + "/";
 
 export default {
 	input: "src/main.js",
@@ -36,10 +29,10 @@ export default {
 		alias({
 			resolve: [".svelte", ".js"],
 			entries: [
-				{ find: /~\/styles\//, replacement: paths.scss + "/" },
-				{ find: /~\/stores\//, replacement: paths.stores + "/" },
-				{ find: /~\/modules\//, replacement: paths.modules + "/" },
-				{ find: /^~\//, replacement: paths.components + "/" },
+				{ find: /~\/scss\//, replacement: pathTo("scss") },
+				{ find: /~\/stores\//, replacement: pathTo("stores") },
+				{ find: /~\/modules\//, replacement: pathTo("modules") },
+				{ find: /^~\//, replacement: pathTo("components") },
 			]
 		}),
 
@@ -57,7 +50,7 @@ export default {
 			// Processes SCSS embedded within Svelte files
 			preprocess: autoPreprocess({
 				scss: {
-					includePaths: [paths.scss],
+					includePaths: [pathTo("scss")],
 					sourceMap: emitSourcemaps,
 				}
 			}),
