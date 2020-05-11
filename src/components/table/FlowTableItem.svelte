@@ -19,6 +19,8 @@
 </script>
 
 <style type="text/scss">
+	@import "shared";
+
 	.item {
 		font-family:"Roboto", sans-serif;
 		overflow:hidden;
@@ -29,9 +31,13 @@
 
 	.hoverable {
 		cursor:pointer;
+
+		@include on-hover {
+			background:#dbf8fd;
+		}
 	}
 
-	.hoverable:hover, .selected {
+	.selected {
 		background:#dbf8fd;
 	}
 

@@ -28,7 +28,7 @@
 					height:2rem;
 				}
 
-				&:hover {
+				@include on-hover {
 					img {
 						filter:invert(100%);
 					}

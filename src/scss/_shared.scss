@@ -23,6 +23,14 @@ $grid-breakpoints: (
 		}
 }
 
+@mixin on-hover {
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            @content;
+        }
+    }
+}
+
 // Input box styles, similar to Bootstrap
 %input-shared {
 	padding:0.5rem;
@@ -34,7 +42,7 @@ $grid-breakpoints: (
 	border-width:1px;
 	border-color:#cdcdcd;
 
-	&:hover {
+	@include on-hover {
 		border-color:#a6a6a6;
 	}
 
@@ -53,7 +61,7 @@ $grid-breakpoints: (
 	border-width:1px;
 	border-color:#cdcdcd;
 
-	&:hover {
+	@include on-hover {
 		border-color:#a6a6a6;
 		background-color:#a6a6a6;
 	}
