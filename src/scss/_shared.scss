@@ -2,16 +2,25 @@
 $fontfam:Arial, Helvetica, sans-serif;
 
 $grid-breakpoints: (
-	stacked: 1200px,
+	mobile: 480px,
+	tablet: 1000px,
 	widescreen: 1400px
 );
 
 @mixin breakpoint-min($key) {
-	@media (min-width: map-get($grid-breakpoints, $key)) { @content; }
+	@media screen and (min-width: map-get($grid-breakpoints, $key)) { @content; }
 }
 
 @mixin breakpoint-max($key) {
-	@media (max-width: map-get($grid-breakpoints, $key)) { @content; }
+	@media screen and (max-width: map-get($grid-breakpoints, $key)) { @content; }
+}
+
+@mixin breakpoint-minmax($key1, $key2) {
+	@media screen 
+		and (min-width: map-get($grid-breakpoints, $key1)) 
+		and (max-width: map-get($grid-breakpoints, $key2)) {
+			@content;
+		}
 }
 
 // Input box styles, similar to Bootstrap

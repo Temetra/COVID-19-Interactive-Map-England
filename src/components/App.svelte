@@ -5,7 +5,6 @@
 	import Footer from "~/Footer.svelte";
 	import Map from "~/mapping/Map.svelte";
 	import Controls from "~/controls/Controls.svelte";
-	import Summary from "~/table/Summary.svelte";
 	import FlowTable from "~/table/FlowTable.svelte";
 	onMount(fetchData);
 </script>
@@ -14,41 +13,31 @@
 	@import "shared";
 
 	.container {
-		display:grid;
+		display: grid;
 		grid-template-areas:
 			"header"
 			"map"
 			"controls"
-			"summary"
 			"data"
 			"footer";
-		grid-template-columns:minmax(600px, 1fr);
-		grid-template-rows:auto minmax(600px, 1fr) auto auto auto auto;
-		gap:1rem 0;
-		margin:0 1rem;
-		height:100vh;
+		grid-template-columns: 1fr;
+		grid-template-rows: fit-content(25vh) 66vh auto auto auto;
+		gap: 1rem;
+		margin: 0 1rem;
 	}
 
-	@include breakpoint-min(stacked) {
+	@include breakpoint-min(tablet) {
 		.container {
 			grid-template-areas:
-				"header header"
+				"header map"
 				"controls map"
-				"summary map"
 				"data map"
-				"footer footer";
-			grid-template-columns:400px 1fr;
-			grid-template-rows:auto auto auto minmax(300px, 1fr) auto;
-			margin:0;
-
-			&>:global(section) {
-				margin-left:1rem;
-			}
-
-			&>:global(header), &>:global(footer) {
-				margin-left:1rem;
-				margin-right:1rem;
-			}
+				"footer map";
+			grid-template-columns: 500px 1fr;
+			grid-template-rows: auto auto 1fr auto;
+			max-width:100%;
+			height: 100vh;
+			margin: 0 0 0 1rem;
 		}
 	}
 
@@ -57,11 +46,10 @@
 			grid-template-areas:
 				"header header"
 				"controls map"
-				"summary map"
 				"data map"
 				"footer footer";
-			grid-template-columns:555px 1fr;
-			grid-template-rows:auto auto auto minmax(350px, 1fr) auto;
+			grid-template-columns: 555px 1fr;
+			grid-template-rows: auto auto 1fr auto;
 		}
 	}
 </style>
@@ -70,7 +58,6 @@
 	<Header />
 	<Map />
 	<Controls />
-	<Summary />
 	<FlowTable />
 	<Footer />
 </div>

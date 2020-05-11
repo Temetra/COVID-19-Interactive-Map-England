@@ -2,15 +2,26 @@
 </script>
 
 <style type="text/scss">
+	@import "shared";
+
 	header {
 		grid-area:header;
 	}
 
 	h1 {
-		margin:2rem 0 1rem 0;
+		padding: 1rem 0 0 0;
+	}
+
+	@include breakpoint-min(widescreen) {
+		h1 {
+			margin: 1rem 0 1rem 0;
+		}
 	}
 </style>
 
 <header>
-	<h1>Interactive map of Coronavirus (COVID-19) cases (cumulative, lab-confirmed) in England</h1>
+	<h1>
+		<span>Interactive map of Coronavirus (COVID-19)</span>
+		<span>cases in England</span>
+	</h1>
 </header>

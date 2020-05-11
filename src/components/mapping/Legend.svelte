@@ -8,6 +8,8 @@
 </script>
 
 <style type="text/scss">
+	@import "shared";
+
 	.title {
 		cursor:pointer;
 		margin-bottom:0.5rem;
@@ -16,8 +18,10 @@
 
 {#if $mapIntervals.size > 0}
 	<div class="title" on:click={toggleMapMode}>
-		{#if $mapMode == "perPop"}Cases per 10,000 people
-		{:else}Total cases in region
+		{#if $mapMode == "perPop"}
+			Cases per 10,000 people
+		{:else}
+			Total cases in region
 		{/if}
 	</div>
 	{#each [...$mapIntervals] as {values, style}}

@@ -18,16 +18,7 @@
 		margin-bottom:1.5rem;
 	}
 
-	@include breakpoint-min(stacked) {
-		section {
-			grid-template-areas:
-				"slider"
-				"filter";
-			gap:1.5rem 1rem;
-		}
-	}
-
-	@include breakpoint-min(widescreen) {
+	@include breakpoint-min(tablet) {
 		section {
 			grid-template-areas:
 				"slider filter";

@@ -24,17 +24,33 @@
 
 	section {
 		grid-area:map;
+	
+		div {
+			width:100%;
+			height:100%;
+			border-radius:1rem;
+		}
 	}
 
-	section > div {
-		width:100%;
-		height:100%;
-		border-radius:1rem;
+	@include breakpoint-max(mobile) {
+		:global(.leaflet-container .legend) {
+			display:none;
+		}
 	}
 
-	@include breakpoint-min(stacked) {
-		section > div {
-			border-radius:1rem 0 0 1rem;
+	@include breakpoint-min(tablet) {
+		section {
+			padding:1rem 0;
+
+			div {
+				border-radius:1rem 0 0 1rem;
+			}
+		}
+	}
+
+	@include breakpoint-min(widescreen) {
+		section {
+			padding:0;
 		}
 	}
 </style>

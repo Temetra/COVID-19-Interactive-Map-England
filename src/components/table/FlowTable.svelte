@@ -10,7 +10,6 @@
 	}
 	from "~/stores/datastore.js";
 	
-	import FlowTableHeading from "./FlowTableHeading.svelte";
 	import FlowTableItem from "./FlowTableItem.svelte";
 
 	let filteredItems = [];
@@ -51,7 +50,8 @@
 
 	section {
 		grid-area:data;
-		height:100%;
+		overflow-y:auto;
+		overflow-x:hidden;
 
 		& :global(:first-child) {
 			margin-top:0;
@@ -63,12 +63,7 @@
 		column-gap:0;
 	}
 
-	@include breakpoint-min(stacked) {
-		section {
-			overflow-y:auto;
-			overflow-x:hidden;
-		}
-
+	@include breakpoint-min(tablet) {
 		.container {
 			column-count:2;
 		}
@@ -84,12 +79,41 @@
 		font-family:"Roboto", sans-serif;
 		padding:0.5rem 0.75rem;
 	}
+
+	h2 {
+		column-span:all;
+		background:#fff;
+		border-bottom:solid 1px #ccc;
+		padding:0.5rem 0.75rem;
+		margin:1rem 0.5rem 0.5rem 0;
+		position:sticky;
+  		top:0;
+	}
+
+	h2.summary {
+		background-image: url("img/document-text-outline.svg");
+		background-repeat: no-repeat;
+		background-size: 18px;
+		padding-left: 2rem;
+		background-position: left center;
+	}
 </style>
 
 <section>
+	<!-- Summary -->
+	<h2 class="summary">Summary</h2>
+	<div class="container">
+		{#each Object.entries($covidSummary) as [name, item]}
+			<FlowTableItem {name} 
+				cases={item} 
+				caseIndex={$focusDayIndex} />
+		{/each}
+	</div>
+
+	<!-- Filtered items -->
 	{#each Object.entries(filteredItems) as [prefix, items]}
-		<FlowTableHeading {prefix} />
-			<div class="container">
+		<h2>{prefix}</h2>
+		<div class="container">
 			{#each items as {name, item} (name)}
 				<FlowTableItem {name} 
 					cases={item.Cases} 
@@ -98,10 +122,12 @@
 					focusRegion={$focusRegion} 
 					on:click={selectRegion} />
 			{/each}
-			</div>
+		</div>
 	{/each}
+	
+	<!-- No items -->
 	{#if Object.keys(filteredItems).length == 0}
-		<FlowTableHeading prefix="-" />
+		<h2>-</h2>
 		<div class="no-regions">No regions found</div>
 	{/if}
 </section>
