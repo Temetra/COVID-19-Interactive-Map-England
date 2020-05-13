@@ -14,7 +14,7 @@
 	};
 
 	let getMaxDays = (count) => {
-		return (count > 0) ? count - 1 : 0;
+		return (count > 0) ? count : 0;
 	};
 </script>
 
