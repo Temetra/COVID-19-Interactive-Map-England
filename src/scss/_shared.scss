@@ -24,11 +24,11 @@ $grid-breakpoints: (
 }
 
 @mixin on-hover {
-    @media (hover: hover) and (pointer: fine) {
-        &:hover {
-            @content;
-        }
-    }
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			@content;
+		}
+	}
 }
 
 // Input box styles, similar to Bootstrap
