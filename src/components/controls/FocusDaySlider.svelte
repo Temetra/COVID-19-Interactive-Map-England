@@ -13,8 +13,8 @@
 		focusDay.set($covidDays[event.target.value]);
 	};
 
-	let getMaxDays = (count) => {
-		return (count > 0) ? count : 0;
+	let getMaxDays = (covidDays) => {
+		return (covidDays.length > 0) ? covidDays.length - 1 : 0;
 	};
 </script>
 
@@ -45,7 +45,7 @@
 	<h2>{formattedDate}</h2>
 	<input type="range" 
 		min="0" 
-		max={getMaxDays($covidDays.length-1)} 
+		max={getMaxDays($covidDays)} 
 		value={$focusDayIndex}
 		on:input={changeDay}>
 </section>
