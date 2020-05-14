@@ -14,9 +14,9 @@
 
 	let filteredItems = [];
 
-	let selectRegion = (event) => {
-		if (event.detail == $focusRegion) focusRegion.set(null);
-		else focusRegion.set(event.detail);
+	let selectRegion = (codes) => {
+		if (!codes || codes[0] == $focusRegion) focusRegion.set(null);
+		else focusRegion.set(codes[0]);
 	};
 
 	let keyFilter = (key, filter) => {
@@ -106,7 +106,7 @@
 		{#each Object.entries($covidSummary) as [name, item]}
 			<FlowTableItem {name} 
 				cases={item} 
-				caseIndex={$focusDayIndex} />
+				focusDayIndex={$focusDayIndex} />
 		{/each}
 	</div>
 
@@ -117,10 +117,10 @@
 			{#each items as {name, item} (name)}
 				<FlowTableItem {name} 
 					cases={item.Cases} 
-					caseIndex={$focusDayIndex} 
-					code={item.Codes[0]}
+					codes={item.Codes}
+					focusDayIndex={$focusDayIndex} 
 					focusRegion={$focusRegion} 
-					on:click={selectRegion} />
+					on:click={() => selectRegion(item.Codes)} />
 			{/each}
 		</div>
 	{/each}

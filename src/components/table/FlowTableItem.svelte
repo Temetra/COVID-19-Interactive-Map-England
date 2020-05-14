@@ -1,20 +1,23 @@
 <script>
 	import { createEventDispatcher } from "svelte";
 	import { fade } from "svelte/transition";
-	
-	export let name, cases, caseIndex, code = null, focusRegion = null;
 
-	const dispatch = createEventDispatcher();
+	export let name, cases, codes = null, focusDayIndex, focusRegion = null;
 	
 	let currentCount, change, increase, decrease, same, selected;
 
 	$: {
-		currentCount = cases[caseIndex];
-		change = caseIndex == 0 ? currentCount : currentCount - cases[Math.max(caseIndex - 1, 0)];
+		// Count for region and selected day
+		currentCount = cases[focusDayIndex];
+
+		// Change in count since previous recorded day
+		change = focusDayIndex == 0 ? currentCount : currentCount - cases[Math.max(focusDayIndex - 1, 0)];
+		
+		// Class style shortcuts
 		increase = change > 0;
 		decrease = change < 0;
 		same = change == 0;
-		selected = (code && code == focusRegion);
+		selected = (codes && codes[0] == focusRegion);
 	}
 </script>
 
@@ -66,7 +69,7 @@
 	}
 </style>
 
-<div class="item" class:hoverable={code} class:selected transition:fade on:click={() => dispatch("click", code)}>
+<div class="item" class:hoverable={codes} class:selected transition:fade on:click>
 	<div class="name">{name}</div>
 	<span class="count">{currentCount}</span>
 	<span class="change" class:increase class:decrease class:same>{change}</span>
