@@ -6,7 +6,8 @@
 		covidDays, 
 		filterRegion, 
 		covidSummary, 
-		covidRegions 
+		covidRegions,
+		mapLookupFunc
 	}
 	from "~/stores/datastore.js";
 	
@@ -104,9 +105,9 @@
 	<h2 class="summary">Summary</h2>
 	<div class="container">
 		{#each Object.entries($covidSummary) as [name, item]}
-			<FlowTableItem {name} 
-				cases={item} 
-				focusDayIndex={$focusDayIndex} />
+			<FlowTableItem {name} cases={item.Data} focusDayIndex={$focusDayIndex}>
+				{item.Description}
+			</FlowTableItem>
 		{/each}
 	</div>
 
@@ -120,7 +121,9 @@
 					codes={item.Codes}
 					focusDayIndex={$focusDayIndex} 
 					focusRegion={$focusRegion} 
-					on:click={() => selectRegion(item.Codes)} />
+					on:click={() => selectRegion(item.Codes)}>
+					{+($mapLookupFunc(item.Codes[0], $focusDayIndex).perPop).toFixed(2)} per 10,000 people
+				</FlowTableItem>
 			{/each}
 		</div>
 	{/each}
