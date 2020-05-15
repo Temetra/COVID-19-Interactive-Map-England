@@ -1,9 +1,19 @@
 <script>
 	import { fade } from "svelte/transition";
 
-	export let name, cases, codes = null, focusDayIndex, focusRegion = null;
+	export let name, 
+		cases, 
+		codes = null, 
+		focusDayIndex, 
+		focusRegion = null,
+		title = null;
 	
-	let currentCount, change, increase, decrease, same, selected, tooltip;
+	let currentCount, 
+		change, 
+		increase, 
+		decrease, 
+		same, 
+		selected;
 
 	$: {
 		// Count for region and selected day
@@ -18,15 +28,6 @@
 		same = change == 0;
 		selected = (codes && codes[0] == focusRegion);
 	}
-
-	function positionTooltip(event) {
-		if (tooltip.innerHTML) {
-			var targetRect = event.target.getBoundingClientRect();
-			tooltip.style.top = `${targetRect.top + targetRect.height}px`;
-			tooltip.style.left = `${targetRect.left}px`;
-			tooltip.style.maxWidth = `${targetRect.width}px`;
-		}
-	}
 </script>
 
 <style type="text/scss">
@@ -38,10 +39,6 @@
 		break-inside:avoid;
 		padding:0.5rem 0.75rem;
 		border-radius:1rem;
-
-		@include on-hover {
-			.tooltip { visibility:visible; }
-		}
 	}
 
 	.selectable {
@@ -59,37 +56,14 @@
 		color:red;
 		&::before { content:"+"; }
 	}
-
-	.tooltip {
-		z-index:1000;
-		position:absolute;
-		visibility:hidden;
-		color:white;
-		background:black;
-		padding:0.75rem;
-		margin:0.5rem 0 0 0;
-		border-radius:0.25rem;
-
-		&::after {
-			content:" ";
-			position:absolute;
-			bottom:100%;
-			left:1.5rem;
-			margin-left:-0.5rem;
-			border:solid 0.5rem;
-			border-color:transparent transparent black transparent;
-		}
-	}
 </style>
 
-<div class="item" 
-	class:selectable={codes} 
+<div class="item" {title}
+	class:selectable={codes}
 	class:selected 
 	transition:fade 
-	on:click 
-	on:mouseenter={positionTooltip}>
+	on:click>
 	<div class="name">{name}</div>
 	<span class="count">{currentCount}</span>
 	<span class="change" class:increase class:decrease class:same>{change}</span>
-	<div class="tooltip" bind:this={tooltip}><slot /></div>
 </div>

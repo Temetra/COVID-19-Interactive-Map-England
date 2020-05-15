@@ -105,9 +105,10 @@
 	<h2 class="summary">Summary</h2>
 	<div class="container">
 		{#each Object.entries($covidSummary) as [name, item]}
-			<FlowTableItem {name} cases={item.Data} focusDayIndex={$focusDayIndex}>
-				{item.Description}
-			</FlowTableItem>
+			<FlowTableItem {name} 
+				title={item.Description}
+				cases={item.Data} 
+				focusDayIndex={$focusDayIndex} />
 		{/each}
 	</div>
 
@@ -117,13 +118,15 @@
 		<div class="container">
 			{#each items as {name, item} (name)}
 				<FlowTableItem {name} 
+					title={`${
+						+($mapLookupFunc(item.Codes[0], $focusDayIndex).perPop)
+						.toFixed(2)
+						} per 10,000 people`}
 					cases={item.Cases} 
 					codes={item.Codes}
 					focusDayIndex={$focusDayIndex} 
 					focusRegion={$focusRegion} 
-					on:click={() => selectRegion(item.Codes)}>
-					{+($mapLookupFunc(item.Codes[0], $focusDayIndex).perPop).toFixed(2)} per 10,000 people
-				</FlowTableItem>
+					on:click={() => selectRegion(item.Codes)} />
 			{/each}
 		</div>
 	{/each}
