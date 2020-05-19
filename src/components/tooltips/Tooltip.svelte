@@ -8,11 +8,11 @@
 
 		switch (position) {
 			case "top":
-				top = targetRect.top - tooltipRect.height;
+				top = targetRect.top - tooltipRect.height + window.scrollY;
 				left = targetRect.left + targetRect.width/2 - tooltipRect.width/2;
 				break;
 			case "bottom":
-				top = targetRect.top + targetRect.height;
+				top = targetRect.top + targetRect.height + window.scrollY;
 				left = targetRect.left + targetRect.width/2 - tooltipRect.width/2;
 				break;
 			case "right":
@@ -51,7 +51,7 @@
 					position = "right";
 					coords = calculateCoords(position, targetRect, tooltipRect);
 				}
-				else if (afterSize + coords.top + tooltipRect.height >= window.innerHeight) {
+				else if (afterSize + coords.top + tooltipRect.height - window.scrollY >= window.innerHeight) {
 					position = "top";
 					coords = calculateCoords(position, targetRect, tooltipRect);
 				}
@@ -64,6 +64,8 @@
 			else {
 				// Hide tooltip
 				tooltip.style.visibility = "hidden";
+				tooltip.style.top = "0px";
+				tooltip.style.left = "0px";
 			}
 		}
 	});
