@@ -77,7 +77,7 @@
 	}
 
 	.no-regions {
-		font-family:"Roboto", sans-serif;
+		font-family:$table-fontfam;
 		padding:0.5rem 0.75rem;
 	}
 
@@ -106,7 +106,6 @@
 	<div class="container">
 		{#each Object.entries($covidSummary) as [name, item]}
 			<FlowTableItem {name} 
-				title={item.Description}
 				cases={item.Data} 
 				focusDayIndex={$focusDayIndex} />
 		{/each}
@@ -118,10 +117,6 @@
 		<div class="container">
 			{#each items as {name, item} (name)}
 				<FlowTableItem {name} 
-					title={`${
-						+($mapLookupFunc(item.Codes[0], $focusDayIndex).perPop)
-						.toFixed(2)
-						} per 10,000 people`}
 					cases={item.Cases} 
 					codes={item.Codes}
 					focusDayIndex={$focusDayIndex} 

@@ -1,12 +1,14 @@
 <script>
 	import { fade } from "svelte/transition";
+	import RegionData from "~/tooltips/RegionData.svelte";
+	import SummaryDescription from "~/tooltips/SummaryDescription.svelte";
+	import { tooltipSource } from "~/stores/datastore.js";
 
 	export let name, 
 		cases, 
 		codes = null, 
 		focusDayIndex, 
-		focusRegion = null,
-		title = null;
+		focusRegion = null;
 	
 	let currentCount, 
 		change, 
@@ -28,13 +30,29 @@
 		same = change == 0;
 		selected = (codes && codes[0] == focusRegion);
 	}
+
+	function setTooltip(event) {
+		// Target is element where tooltip should be positioned
+		let target = event.target;
+		// Template is svelte component constructor for tooltip contents
+		let template = (codes ? RegionData : SummaryDescription);
+		// Payload is optional data for component
+		let payload = (codes ? codes[0] : name);
+		// Set store
+		tooltipSource.set({ target, template, payload });
+	}
+
+	function clearTooltip() {
+		// Clear store
+		tooltipSource.set();
+	}
 </script>
 
 <style type="text/scss">
 	@import "shared";
 
 	.item {
-		font-family:"Roboto", sans-serif;
+		font-family:$table-fontfam;
 		overflow:hidden;
 		break-inside:avoid;
 		padding:0.5rem 0.75rem;
@@ -58,11 +76,14 @@
 	}
 </style>
 
-<div class="item" {title}
+<div class="item"
 	class:selectable={codes}
 	class:selected 
 	transition:fade 
-	on:click>
+	on:click
+	on:mouseenter={setTooltip}
+	on:mouseleave={clearTooltip}
+>
 	<div class="name">{name}</div>
 	<span class="count">{currentCount}</span>
 	<span class="change" class:increase class:decrease class:same>{change}</span>

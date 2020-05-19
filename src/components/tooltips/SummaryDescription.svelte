@@ -1,0 +1,17 @@
+<script>
+	import { covidSummary } from "~/stores/datastore.js";
+	export let payload;
+	$: desc = $covidSummary[payload].Description;
+</script>
+
+<style type="text/scss">
+	@import "shared";
+
+	div {
+		width:160px;
+		text-align:center;
+		font-family:$table-fontfam;
+	}
+</style>
+
+<div>{desc}</div>

@@ -1,6 +1,9 @@
 import { writable, derived } from "svelte/store";
 import { MapIntervals, RegionData } from "~/modules/map-legend.js";
 
+// Tooltips
+export const tooltipSource = writable();
+
 // Fetched data
 export const geoData = writable(); // Counties and Unitary Authorities boundary data
 export const popData = writable({}); // Estimated population data for mid-2018

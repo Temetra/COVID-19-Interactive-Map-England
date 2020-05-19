@@ -6,6 +6,8 @@
 	import Map from "~/mapping/Map.svelte";
 	import Controls from "~/controls/Controls.svelte";
 	import FlowTable from "~/table/FlowTable.svelte";
+	import Tooltip from "~/tooltips/Tooltip.svelte";
+	import { tooltipSource } from "~/stores/datastore.js";
 	onMount(fetchData);
 </script>
 
@@ -53,6 +55,8 @@
 		}
 	}
 </style>
+
+<Tooltip source={$tooltipSource} />
 
 <div class="container">
 	<Header />
