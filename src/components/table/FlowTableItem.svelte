@@ -85,6 +85,6 @@
 	on:mouseleave={clearTooltip}
 >
 	<div class="name">{name}</div>
-	<span class="count">{currentCount}</span>
+	<span class="count">{currentCount.toLocaleString()}</span>
 	<span class="change" class:increase class:decrease class:same>{change}</span>
 </div>

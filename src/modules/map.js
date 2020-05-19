@@ -140,7 +140,7 @@ function createPopupContent(layer) {
 	else {
 		return `
 		<span>${authority}</span>
-		<br/>${count} case${count == 1 ? "" : "s"}
+		<br/>${count.toLocaleString()} case${count == 1 ? "" : "s"}
 		<br/>${+perPop.toFixed(2)} per 10,000 people
 		`;
 	}
