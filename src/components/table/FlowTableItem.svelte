@@ -49,7 +49,7 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
+	@import "onhover";
 
 	.item {
 		font-family:$table-fontfam;

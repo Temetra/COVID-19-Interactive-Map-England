@@ -12,7 +12,7 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
+	@import "breakpoints";
 
 	.container {
 		display: grid;

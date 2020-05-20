@@ -11,7 +11,8 @@
 	}
 	from "~/stores/datastore.js";
 	
-	import FlowTableItem from "./FlowTableItem.svelte";
+	import SummaryItem from "./SummaryItem.svelte";
+	import RegionItem from "./RegionItem.svelte";
 
 	let filteredItems = [];
 
@@ -47,7 +48,8 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
+	@import "breakpoints";
+	@import "tableitem";
 
 	section {
 		grid-area:data;
@@ -105,7 +107,7 @@
 	<h2 class="summary">Summary</h2>
 	<div class="container">
 		{#each Object.entries($covidSummary) as [name, item]}
-			<FlowTableItem {name} 
+			<SummaryItem {name} 
 				cases={item.Data} 
 				focusDayIndex={$focusDayIndex} />
 		{/each}
@@ -116,7 +118,7 @@
 		<h2>{prefix}</h2>
 		<div class="container">
 			{#each items as {name, item} (name)}
-				<FlowTableItem {name} 
+				<RegionItem {name} 
 					cases={item.Cases} 
 					codes={item.Codes}
 					focusDayIndex={$focusDayIndex} 

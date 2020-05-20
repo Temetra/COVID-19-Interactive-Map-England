@@ -5,8 +5,8 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
-	
+	@import "tableitem";
+
 	div {
 		width:160px;
 		text-align:center;

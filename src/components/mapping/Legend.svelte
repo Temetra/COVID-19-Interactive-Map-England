@@ -8,8 +8,6 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
-
 	.title {
 		cursor:pointer;
 		margin-bottom:0.5rem;

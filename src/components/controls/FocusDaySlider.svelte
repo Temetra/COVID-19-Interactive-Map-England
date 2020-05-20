@@ -19,8 +19,6 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
-
 	section {
 		grid-area:slider;
 		overflow:hidden;

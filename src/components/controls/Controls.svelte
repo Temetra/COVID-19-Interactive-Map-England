@@ -4,7 +4,7 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
+	@import "breakpoints";
 
 	section {
 		grid-area:controls;

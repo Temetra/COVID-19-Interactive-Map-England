@@ -1,0 +1,18 @@
+$table-fontfam:"Roboto", sans-serif;
+
+%table-item {
+	font-family:$table-fontfam;
+	overflow:hidden;
+	break-inside:avoid;
+	padding:0.5rem 0.75rem;
+	border-radius:1rem;
+
+	.name { margin:0 0 0.25rem 0; }
+	.count { margin:0 0.5rem 0 0; }
+	.same { display:none; }
+	.decrease { color:green; }
+	.increase { 
+		color:red;
+		&::before { content:"+"; }
+	}
+}

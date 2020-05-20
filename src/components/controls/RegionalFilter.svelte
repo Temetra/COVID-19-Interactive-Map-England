@@ -5,7 +5,7 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
+	@import "onhover";
 
 	section {
 		grid-area:filter;
@@ -19,10 +19,23 @@
 			border-radius:0 7px 7px 0;
 			
 			button {
-				@extend %button-shared;
+				display:flex;
 				width:100%;
 				height:100%;
 				padding:0 0.5rem;
+				align-items:center;
+				background-color:#cdcdcd;
+				border:solid 1px #cdcdcd;
+				border-radius:0 7px 7px 0;
+
+				@include on-hover {
+					border-color:#a6a6a6;
+					background-color:#a6a6a6;
+				}
+
+				&:focus {
+					outline:none;
+				}
 
 				img {
 					height:2rem;
@@ -37,12 +50,22 @@
 		}
 
 		input {
-			@extend %input-shared;
-			border-top-right-radius:0;
-			border-bottom-right-radius:0;
 			flex:auto;
-			height:100%;
 			width:0;
+			height:100%;
+			padding:0.5rem;
+			font-size:11pt;
+			border:solid 1px #cdcdcd;
+			border-radius:7px 0 0 7px;
+			-webkit-appearance:none;
+
+			@include on-hover {
+				border-color:#a6a6a6;
+			}
+
+			&:focus {
+				outline:none;
+			}
 		}
 	}
 

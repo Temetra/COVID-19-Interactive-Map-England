@@ -2,7 +2,7 @@
 </script>
 
 <style type="text/scss">
-	@import "shared";
+	@import "breakpoints";
 
 	footer {
 		grid-area:footer;
