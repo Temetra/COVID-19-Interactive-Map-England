@@ -1,34 +1,11 @@
 <script>
 	import { fade } from "svelte/transition";
 	import { tooltipStore } from "~/stores/datastore.js";
+	import Item from "~/table/Item.svelte";
 	import RegionData from "~/tooltips/RegionData.svelte";
 
-	export let name, 
-		cases, 
-		codes, 
-		focusDayIndex, 
-		focusRegion;
-	
-	let currentCount, 
-		change, 
-		increase, 
-		decrease, 
-		same, 
-		selected;
-
-	$: {
-		// Count for region and selected day
-		currentCount = cases[focusDayIndex];
-
-		// Change in count since previous recorded day
-		change = focusDayIndex == 0 ? currentCount : currentCount - cases[Math.max(focusDayIndex - 1, 0)];
-		
-		// Class style shortcuts
-		increase = (change > 0);
-		decrease = (change < 0);
-		same = (change == 0);
-		selected = (codes[0] == focusRegion);
-	}
+	export let name, cases, focusDayIndex, 
+		codes, focusRegion;
 
 	function setTooltip(event) {
 		tooltipStore.set({ 
@@ -55,14 +32,13 @@
 	}
 </style>
 
-<div class="item"
-	class:selected 
+<div
+	class="item"
+	class:selected={codes[0] == focusRegion}
 	transition:fade 
 	on:click
 	on:mouseenter={setTooltip}
 	on:mouseleave={clearTooltip}
 >
-	<div class="name">{name}</div>
-	<span class="count">{currentCount.toLocaleString()}</span>
-	<span class:same class:decrease class:increase>{change}</span>
+	<Item {name} {cases} {focusDayIndex} />
 </div>
