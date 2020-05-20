@@ -1,5 +1,6 @@
 <script>
-	export let name, cases, focusDayIndex;
+	import { focusDayIndex } from "~/stores/datastore.js";
+	export let name, cases;
 
 	let currentCount, 
 		change, 
@@ -9,10 +10,10 @@
 
 	$: {
 		// Count for region and selected day
-		currentCount = cases[focusDayIndex];
+		currentCount = cases[$focusDayIndex];
 
 		// Change in count since previous recorded day
-		change = focusDayIndex == 0 ? currentCount : currentCount - cases[Math.max(focusDayIndex - 1, 0)];
+		change = $focusDayIndex == 0 ? currentCount : currentCount - cases[Math.max($focusDayIndex - 1, 0)];
 		
 		// Class style shortcuts
 		increase = change > 0;

@@ -1,49 +1,15 @@
 <script>
-	import { 
-		focusDay, 
-		focusDayIndex, 
-		focusRegion, 
-		covidDays, 
-		filterRegion, 
-		covidSummary, 
-		covidRegions,
-		mapLookupFunc
-	}
-	from "~/stores/datastore.js";
-	
+	import { covidRegions, filterRegion, focusRegion, covidSummary } from "~/stores/datastore.js";
+	import { filterItems } from "~/modules/flow-table.js";
 	import SummaryItem from "./SummaryItem.svelte";
 	import RegionItem from "./RegionItem.svelte";
+	import ItemBody from "~/table/ItemBody.svelte";
 
-	let filteredItems = [];
+	$: filteredItems = filterItems($covidRegions, $filterRegion);
 
-	let selectRegion = (codes) => {
+	function selectRegion(codes) {
 		if (!codes || codes[0] == $focusRegion) focusRegion.set(null);
 		else focusRegion.set(codes[0]);
-	};
-
-	let keyFilter = (key, filter) => {
-		return key.toUpperCase().includes((filter || "").toUpperCase());
-	};
-
-	let itemGrouper = (result, [name, item]) => {
-		// Get first letter
-		let prefix = name[0];
-
-		// Add to existing object key array, or create new
-		if (prefix in result) result[prefix].push({ name, item });
-		else result[prefix] = [{ name, item }];
-
-		// Return object
-		return result;
-	};
-
-	$: {
-		// Filter regions by user input
-		// Then group by first letter
-		// Assumes covidRegions is alphabetically sorted
-		filteredItems = Object.entries($covidRegions)
-			.filter(([regionName, _]) => keyFilter(regionName, $filterRegion))
-			.reduce(itemGrouper, {});
 	}
 </script>
 
@@ -107,9 +73,9 @@
 	<h2 class="summary">Summary</h2>
 	<div class="container">
 		{#each Object.entries($covidSummary) as [name, item]}
-			<SummaryItem {name} 
-				cases={item.Data} 
-				focusDayIndex={$focusDayIndex} />
+			<SummaryItem {name}>
+				<ItemBody {name} cases={item.Data} />
+			</SummaryItem>
 		{/each}
 	</div>
 
@@ -118,12 +84,9 @@
 		<h2>{prefix}</h2>
 		<div class="container">
 			{#each items as {name, item} (name)}
-				<RegionItem {name} 
-					cases={item.Cases} 
-					codes={item.Codes}
-					focusDayIndex={$focusDayIndex} 
-					focusRegion={$focusRegion} 
-					on:click={() => selectRegion(item.Codes)} />
+				<RegionItem codes={item.Codes} on:click={() => selectRegion(item.Codes)}>
+					<ItemBody {name} cases={item.Cases} />
+				</RegionItem>
 			{/each}
 		</div>
 	{/each}

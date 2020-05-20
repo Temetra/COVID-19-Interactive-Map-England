@@ -1,11 +1,9 @@
 <script>
 	import { fade } from "svelte/transition";
-	import { tooltipStore } from "~/stores/datastore.js";
-	import Item from "~/table/Item.svelte";
+	import { tooltipStore, focusRegion } from "~/stores/datastore.js";
 	import RegionData from "~/tooltips/RegionData.svelte";
 
-	export let name, cases, focusDayIndex, 
-		codes, focusRegion;
+	export let codes;
 
 	function setTooltip(event) {
 		tooltipStore.set({ 
@@ -24,7 +22,7 @@
 	@import "tableitem";
 	@import "onhover";
 
-	.item {
+	div {
 		@extend %table-item;
 		cursor:pointer;
 		@include on-hover { background:#dbf8fd; }
@@ -33,12 +31,11 @@
 </style>
 
 <div
-	class="item"
-	class:selected={codes[0] == focusRegion}
+	class:selected={codes[0] == $focusRegion}
 	transition:fade 
 	on:click
 	on:mouseenter={setTooltip}
 	on:mouseleave={clearTooltip}
 >
-	<Item {name} {cases} {focusDayIndex} />
+	<slot></slot>
 </div>
