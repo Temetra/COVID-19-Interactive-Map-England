@@ -2,7 +2,7 @@ import { writable, derived } from "svelte/store";
 import { MapIntervals, RegionData } from "~/modules/map-legend.js";
 
 // Tooltips
-export const tooltipSource = writable();
+export const tooltipStore = writable();
 
 // Fetched data
 export const geoData = writable(); // Counties and Unitary Authorities boundary data

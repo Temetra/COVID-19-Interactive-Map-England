@@ -7,7 +7,7 @@
 	import Controls from "~/controls/Controls.svelte";
 	import FlowTable from "~/table/FlowTable.svelte";
 	import Tooltip from "~/tooltips/Tooltip.svelte";
-	import { tooltipSource } from "~/stores/datastore.js";
+	import { tooltipStore } from "~/stores/datastore.js";
 	onMount(fetchData);
 </script>
 
@@ -56,7 +56,7 @@
 	}
 </style>
 
-<Tooltip source={$tooltipSource} />
+<Tooltip store={tooltipStore} />
 
 <div class="container">
 	<Header />

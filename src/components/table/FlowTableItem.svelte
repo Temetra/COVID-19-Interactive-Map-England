@@ -2,7 +2,7 @@
 	import { fade } from "svelte/transition";
 	import RegionData from "~/tooltips/RegionData.svelte";
 	import SummaryDescription from "~/tooltips/SummaryDescription.svelte";
-	import { tooltipSource } from "~/stores/datastore.js";
+	import { tooltipStore } from "~/stores/datastore.js";
 
 	export let name, 
 		cases, 
@@ -39,12 +39,12 @@
 		// Payload is optional data for component
 		let payload = (codes ? codes[0] : name);
 		// Set store
-		tooltipSource.set({ target, template, payload });
+		tooltipStore.set({ target, template, payload });
 	}
 
 	function clearTooltip() {
 		// Clear store
-		tooltipSource.set();
+		tooltipStore.set();
 	}
 </script>
 
