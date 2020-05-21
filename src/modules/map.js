@@ -11,7 +11,7 @@ const showTiles = true;
 let map, legend, tileLayer, geoLayer;
 
 // Map initialisation
-export function createMap(mapElement) {
+export async function createMap(mapElement) {
 	// Only create map once
 	if (map != null) return;
 

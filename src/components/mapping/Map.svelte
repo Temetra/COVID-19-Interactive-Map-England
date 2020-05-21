@@ -4,19 +4,19 @@
 	import { createMap, addGeoData, updateGeoLayer, updateMapFocus } from "~/modules/map.js";
 	
 	// Container element for Leaflet
-	let mapElement;
+	let mapElement, mapReady = false;
 	
 	// Create Leaflet map when component mounts
-	onMount(() => createMap(mapElement));
+	onMount(() => createMap(mapElement).then(() => mapReady = true));
 
 	// Add GeoJson when loaded
-	$: addGeoData($geoData);
+	$: if (mapReady) addGeoData($geoData);
 
 	// Update Geo layer
-	$: updateGeoLayer($mapLookupFunc, $focusDayIndex);
+	$: if (mapReady) updateGeoLayer($mapLookupFunc, $focusDayIndex);
 
 	// Focus on region
-	$: updateMapFocus($focusRegion);
+	$: if (mapReady) updateMapFocus($focusRegion);
 </script>
 
 <style type="text/scss">
