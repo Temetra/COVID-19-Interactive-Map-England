@@ -2,8 +2,8 @@
 	import { focusDayIndex } from "~/stores/datastore.js";
 	export let name, cases;
 
-	let currentCount, 
-		change, 
+	let currentCount = 0, 
+		change = 0, 
 		increase, 
 		decrease, 
 		same;
@@ -35,4 +35,4 @@
 
 <div class="name">{name}</div>
 <span class="count">{currentCount.toLocaleString()}</span>
-<span class:increase class:decrease class:same>{change}</span>
+<span class:increase class:decrease class:same>{change.toLocaleString()}</span>
