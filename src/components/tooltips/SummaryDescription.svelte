@@ -1,17 +1,30 @@
 <script>
 	import { covidSummary } from "~/stores/datastore.js";
-	export let payload;
+	export let position, payload;
 	$: desc = $covidSummary[payload].Description;
 </script>
 
 <style type="text/scss">
 	@import "tableitem";
+	@import "tooltips";
 
-	div {
-		width:175px;
-		text-align:center;
+	@include tooltip(".container", ".pointer", ".content");
+
+	.container {
 		font-family:$table-fontfam;
+
+		.content {
+			padding:0.75rem;
+			border-radius:0.25rem;
+		}
 	}
 </style>
 
-<div>{desc}</div>
+<div 
+	class="container"
+	class:top={position == "top"}
+	class:bottom={position == "bottom"}
+>
+	<div class="pointer"></div>
+	<div class="content">{desc}</div>
+</div>

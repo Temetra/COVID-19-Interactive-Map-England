@@ -1,27 +1,39 @@
 <script>
 	import { focusDayIndex, mapLookupFunc } from "~/stores/datastore.js";
-	export let payload;
+	export let position, payload;
 	$: perPop = $mapLookupFunc(payload, $focusDayIndex).perPop;
 </script>
 
 <style type="text/scss">
 	@import "tableitem";
+	@import "tooltips";
 
-	div {
+	$tooltip-background:white;
+	$tooltip-foreground:black;
+
+	@include tooltip(".container", ".pointer", ".content");
+
+	.container {
 		width:250px;
 		text-align:center;
 		font-family:$table-fontfam;
-	}
+		filter:drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
 
-	div > div {
-		background-color:white;
-		color:black;
-		padding:2rem;
-		margin:1rem 0 0 0;
+		.content {
+			padding:0.75rem;
+			border-radius:0.25rem;
+		}
 	}
 </style>
 
-<div>
-	{+perPop.toFixed(2)} per 10,000 people
-	<div>Fancy chart</div>
+<div 
+	class="container"
+	class:top={position == "top"}
+	class:bottom={position == "bottom"}
+>
+	<div class="pointer"></div>
+	<div class="content">
+		{+perPop.toFixed(2)} per 10,000 people
+		<p>Chart goes here</p>
+	</div>
 </div>

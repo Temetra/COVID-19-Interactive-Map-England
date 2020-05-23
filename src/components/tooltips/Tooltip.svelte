@@ -11,15 +11,19 @@
 
 	// Tooltip is removed when store is cleared
 	// Tooltip element has mouse events to prevent clearing
-	$: {
+	store.subscribe($store => {
 		if ($store) {
+			// Stop scheduled tooltip removal
 			cancelReset();
+			// Default to "bottom" so dynamic component has base style to work with
+			position = "bottom";
+			// Copy refs to store content
 			({target, template, payload} = $store);
 		}
 		else if (target) {
 			scheduleReset();
 		}
-	}
+	});
 
 	// Allow 50ms for cursor to enter tooltip
 	function scheduleReset() {
@@ -48,15 +52,15 @@
 		let targetRect = targetElement.getBoundingClientRect();
 		let tooltipRect = tooltipElement.getBoundingClientRect();
 
-		// Compute tooltip position
-		let position = "bottom";
-		let top = targetRect.top + targetRect.height + window.scrollY;
-
-		// Check if content extends past page, reverse position if so
-		if (top + tooltipRect.height - window.scrollY >= window.innerHeight) {
-			position = "top";
-			top = targetRect.top - tooltipRect.height + window.scrollY;
-		}
+		// Get tooltip position
+		let containsTop = tooltipElement.firstElementChild.classList.contains("top");
+		let pastViewport = targetRect.bottom + tooltipRect.height >= window.innerHeight;
+		let position = containsTop || pastViewport ? "top" : "bottom";
+		
+		// Calculate top
+		let top = 0;
+		if (position == "top") top = targetRect.top - tooltipRect.height + window.scrollY;
+		else top = targetRect.top + targetRect.height + window.scrollY;
 
 		// Show tooltip
 		tooltipElement.style.visibility = "visible";
@@ -79,59 +83,20 @@
 		position:relative;
 	}
 
-	$pointer-width:0.5rem;
-	$pointer-length:0.5rem;
-	$background:black;
-	$foreground:white;
-
 	.tooltip {
 		z-index:500;
 		position:absolute;
 		visibility:hidden;
-		display: grid;
-		grid-template-areas:
-			"arrow"
-			"content";
-	}
-
-	.tooltip.top {
-		grid-template-areas:
-			"content"
-			"arrow";
-	}
-
-	.arrow {
-		grid-area:arrow;
-		width:$pointer-width;
-		margin:(-$pointer-length) 0 0 1rem;
-		border:solid $pointer-width transparent;
-		border-bottom:solid $pointer-length $background;
-	}
-
-	.top .arrow {
-		margin:0 0 (-$pointer-length) 1rem;
-		border:solid $pointer-width transparent;
-		border-top:solid $pointer-length $background;
-	}
-
-	.content {
-		grid-area:content;
-		color:$foreground;
-		background:$background;
-		padding:0.75rem;
-		border-radius:0.25rem;
 	}
 </style>
 
 <section>
 	<div 
 		class="tooltip" 
-		class:top={position == "top"} 
 		bind:this={tooltipElement}
 		on:mouseenter={cancelReset}
 		on:mouseleave={scheduleReset}
 	>
-		<div class="arrow"></div>
-		<div class="content"><svelte:component this={template} {payload} /></div>
+		<svelte:component this={template} {position} {payload} />
 	</div>
 </section>

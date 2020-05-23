@@ -1,0 +1,48 @@
+$tooltip-pointer-width:0.5rem;
+$tooltip-pointer-length:0.5rem;
+$tooltip-pointer-margin:0 auto 0 1rem;
+$tooltip-background:black;
+$tooltip-foreground:white;
+
+@mixin tooltip($container, $pointer, $content) {
+	#{$container} { 
+		display: grid;
+
+		#{$pointer} { 
+			grid-area:pointer;
+			width:$tooltip-pointer-width;
+			border:solid $tooltip-pointer-width transparent;
+			margin:$tooltip-pointer-margin;
+		}
+
+		#{$content} {
+			grid-area:content;
+			color:$tooltip-foreground;
+			background:$tooltip-background;
+		}
+
+		&.bottom {
+			grid-template-areas:
+				"pointer"
+				"content";
+		
+			#{$pointer} {
+				margin-top:(-$tooltip-pointer-length) + nth($tooltip-pointer-margin, 1);
+				margin-bottom:0;
+				border-bottom:solid $tooltip-pointer-length $tooltip-background;
+			}
+		}
+		
+		&.top { 
+			grid-template-areas:
+				"content"
+				"pointer";
+		
+			#{$pointer} { 
+				margin-top:0;
+				margin-bottom:(-$tooltip-pointer-length) + nth($tooltip-pointer-margin, 3);
+				border-top:solid $tooltip-pointer-length $tooltip-background;
+			}
+		}
+	}
+}
