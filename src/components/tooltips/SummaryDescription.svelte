@@ -8,7 +8,7 @@
 	@import "tableitem";
 
 	div {
-		width:160px;
+		width:175px;
 		text-align:center;
 		font-family:$table-fontfam;
 	}
