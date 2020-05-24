@@ -32,15 +32,26 @@ export async function fetchData() {
 function processResults([geoJson, populationJson, covidJson]) {
 	let lookup = new RegionDataLookup();
 
+	// Maximum case values
 	let maximums = {
 		raw: new MaxCases(),
-		perPop: new MaxCases()
+		perPop: new MaxCases(),
+		country: new MaxCases(),
+		countryPerPop: new MaxCases(),
 	}
-	
+
+	// Add regions to lookup
 	for (let [Name, { Codes, Cases }] of Object.entries(covidJson.CasesByRegion)) {
 		let data = lookup.update(Name, Codes, Cases, populationJson);
 		maximums.raw.update(data.raw);
 		maximums.perPop.update(data.perPop);
+	}
+
+	// Add country to lookup
+	{
+		let data = lookup.update("England", ["E92000001"], covidJson.Summary["Total cases"].Data, populationJson);
+		maximums.country.update(data.raw);
+		maximums.countryPerPop.update(data.perPop);
 	}
 
 	return [
