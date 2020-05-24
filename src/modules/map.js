@@ -3,8 +3,6 @@ import Legend from "~/mapping/Legend.svelte";
 
 // Settings
 const center = { lat: 52.914639, lon: -1.47189 }
-const zoom = 7;
-const focusZoom = 9;
 const showTiles = true;
 
 // Variables
@@ -18,7 +16,7 @@ export async function createMap(mapElement) {
 	// Create map
 	map = L.map(mapElement, {
 		center,
-		zoom
+		zoom: getBaseZoomLevel()
 	});
 		
 	// Add custom style to overlay pane
@@ -113,12 +111,12 @@ export function updateMapFocus(region) {
 		if (target) {
 			let latlng = L.latLng(target.feature.properties.lat, target.feature.properties.long);
 			showFeaturePopup(latlng, target);
-			map.setView(target.getCenter(), focusZoom, { animate: true });
+			map.setView(target.getCenter(), getFocusZoomLevel(), { animate: true });
 		}
 	} else {
 		// Reset map if focused region is cleared
 		map.closePopup();
-		map.setView(center, zoom, { animate: true });
+		map.setView(center, getBaseZoomLevel(), { animate: true });
 	}
 }
 
@@ -148,4 +146,14 @@ function showFeaturePopup(latlng, layer) {
 	let content = createPopupContent(layer);
 	layer.bindPopup(content, { className:"region-popup", closeOnClick:false }).addTo(map);
 	layer.openPopup(latlng);
+}
+
+function getBaseZoomLevel() {
+	if (window.innerWidth <= 480 || window.innerHeight <= 400) return 5;
+	else if (window.innerWidth <= 1000 || window.innerHeight <= 800) return 6;
+	return 7;
+}
+
+function getFocusZoomLevel() {
+	return 9;
 }
