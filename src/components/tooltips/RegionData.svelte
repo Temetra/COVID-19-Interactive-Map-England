@@ -1,16 +1,19 @@
 <script>
 	import { onMount } from "svelte";
 	import sparkline from "@fnando/sparkline";
-	import { focusDayIndex, mapLookupFunc, covidSummary, mapLookup } from "~/stores/datastore.js";
+	import { focusDayIndex, covidSummary, mapLookup, mapMaximums } from "~/stores/datastore.js";
 	export let position, payload;
+
 	let totalChart, regionChart;
-	$: perPop = $mapLookupFunc(payload, $focusDayIndex).perPop;
+
+	let totalCases = $covidSummary["Total cases"].Data;
+	let regionCases = $mapLookup.table[payload].perPop;
+	let minScale = $mapMaximums.perPop.value;
+	$: perPop = regionCases[$focusDayIndex];
 
 	onMount(() => {
-		let totalCases = $covidSummary["Total cases"].Data;
-		let regionCases = $mapLookup.table[payload].raw;
 		sparkline(totalChart, totalCases);
-		sparkline(regionChart, regionCases);
+		sparkline(regionChart, regionCases, { minScale });
 	})
 </script>
 
@@ -24,10 +27,9 @@
 	@include tooltip(".container", ".pointer", ".content");
 
 	.container {
-		width:260px;
 		text-align:center;
 		font-family:$table-fontfam;
-		filter:drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+		filter:drop-shadow(0 0 2px rgba(0, 0, 0, 0.66));
 
 		.content {
 			padding:0.75rem;
@@ -46,7 +48,7 @@
 		}
 
 		svg:nth-child(2) {
-			margin-top:-95px;
+			margin-top:-50px;
 			stroke:scale-color(red, $alpha: -25%);
 			fill:scale-color(red, $alpha: -85%);
 		}
@@ -61,7 +63,7 @@
 	<div class="pointer"></div>
 	<div class="content">
 		{+perPop.toFixed(2)} per 10,000 people
-		<svg bind:this={totalChart} width="250" height="95" stroke-width="2"></svg>
-		<svg bind:this={regionChart} width="250" height="95" stroke-width="2"></svg>
+		<svg bind:this={totalChart} width="200" height="50" stroke-width="2"></svg>
+		<svg bind:this={regionChart} width="200" height="50" stroke-width="2"></svg>
 	</div>
 </div>
