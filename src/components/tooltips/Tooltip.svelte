@@ -1,5 +1,6 @@
 <script>
 	import { afterUpdate } from "svelte";
+	import { createTimer } from "~/modules/timers.js";
 	export let store;
 	
 	let tooltipElement, 
@@ -7,45 +8,60 @@
 		target, 
 		template, 
 		payload,
-		timerRef;
+		timer = createTimer();
 
-	// Tooltip is removed when store is cleared
-	// Tooltip element has mouse events to prevent clearing
 	store.subscribe($store => {
+		// Cancel any existing timer
+		cancelTimer();
+		
+		// Check store state
 		if ($store) {
-			// Stop scheduled tooltip removal
-			cancelReset();
-			// Default to "bottom" so dynamic component has base style to work with
-			position = "bottom";
-			// Copy refs to store content
-			({target, template, payload} = $store);
+			// Store has different target to component
+			// Remove existing tooltip immediately
+			if (target && target != $store.target) {
+				target = template = payload = null;
+			}
+			
+			// Component has no target
+			// Show new tooltip after a delay
+			if (!target) {
+				scheduleDisplay($store);
+			}
+
+			// Otherwise continue showing current tooltip
 		}
-		else if (target) {
+		else {
+			// Remove tooltip after a delay
 			scheduleReset();
 		}
 	});
 
-	// Allow 50ms for cursor to enter tooltip
-	function scheduleReset() {
-		timerRef = timerRef || setTimeout(() => {
-			timerRef = null;
-			target = template = payload = null;
-		}, 50);
-	}
-
-	// Cancel scheduled reset
-	function cancelReset() {
-		clearTimeout(timerRef);
-		timerRef = null;
-	}
-
-	// Move tooltip after content is mounted
 	afterUpdate(() => {
 		if (tooltipElement) {
 			if (target) position = showTooltip(target, tooltipElement);
 			else hideTooltip(tooltipElement);
 		}
 	});
+
+	// Show tooltip in n millis
+	function scheduleDisplay($store) {
+		timer.waitFor(750).then(() => {
+			position = "bottom";
+			({target, template, payload} = $store);
+		});
+	}
+
+	// Allow n millis for cursor to enter tooltip
+	function scheduleReset() {
+		timer.waitFor(50).then(() => {
+			target = template = payload = null;
+		});
+	}
+
+	// Cancel scheduled event
+	function cancelTimer() {
+		timer.cancel();
+	}
 
 	function showTooltip(targetElement, tooltipElement) {
 		// Get size of elements
@@ -94,7 +110,7 @@
 	<div 
 		class="tooltip" 
 		bind:this={tooltipElement}
-		on:mouseenter={cancelReset}
+		on:mouseenter={cancelTimer}
 		on:mouseleave={scheduleReset}
 	>
 		<svelte:component this={template} {position} {payload} />
