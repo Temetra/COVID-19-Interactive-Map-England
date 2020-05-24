@@ -21,5 +21,8 @@
     "rollup-plugin-visualizer": "^4.0.4",
     "svelte": "^3.21.0",
     "svelte-preprocess": "^3.7.4"
+  },
+  "dependencies": {
+    "@fnando/sparkline": "^0.3.10"
   }
 }
