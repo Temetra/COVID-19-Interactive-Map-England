@@ -35,9 +35,7 @@ function processResults([geoJson, populationJson, covidJson]) {
 	// Maximum case values
 	let maximums = {
 		raw: new MaxCases(),
-		perPop: new MaxCases(),
-		country: new MaxCases(),
-		countryPerPop: new MaxCases(),
+		perPop: new MaxCases()
 	}
 
 	// Add regions to lookup
@@ -48,11 +46,7 @@ function processResults([geoJson, populationJson, covidJson]) {
 	}
 
 	// Add country to lookup
-	{
-		let data = lookup.update("England", ["E92000001"], covidJson.Summary["Total cases"].Data, populationJson);
-		maximums.country.update(data.raw);
-		maximums.countryPerPop.update(data.perPop);
-	}
+	lookup.update("England", ["E92000001"], covidJson.Summary["Total cases"].Data, populationJson);
 
 	return [
 		geoJson, 

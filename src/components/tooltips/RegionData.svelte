@@ -6,14 +6,14 @@
 
 	let totalChart, regionChart;
 
-	let totalCases = $mapLookup.table["E92000001"].perPop;
-	let regionCases = $mapLookup.table[payload].perPop;
-	let minScale = $mapMaximums.countryPerPop.value;
-	$: perPop = regionCases[$focusDayIndex];
+	let england = $mapLookup.table["E92000001"];
+	let region = $mapLookup.table[payload];
+	let minScale = Math.max(england.perPopMax, region.perPopMax);
+	$: perPop = region.perPop[$focusDayIndex];
 
 	onMount(() => {
-		sparkline(totalChart, totalCases);
-		sparkline(regionChart, regionCases, { minScale });
+		sparkline(totalChart, england.perPop, { minScale });
+		sparkline(regionChart, region.perPop, { minScale });
 	})
 </script>
 

@@ -34,18 +34,29 @@ function defaultDescriptionValues(k, size) {
 }
 
 export class RegionData {
-	constructor(name = null, raw = [], perPop = []) {
+	constructor(name = null, raw = [], perPop = [], perPopMax = 0) {
 		this.name = name;
 		this.raw = raw;
 		this.perPop = perPop;
+		this.perPopMax = perPopMax;
 	}
 
 	valueAt(idx) {
 		if (idx !== undefined && idx >= 0 && idx < this.raw.length) {
-			return { name:this.name, raw:this.raw[idx], perPop:this.perPop[idx] };
+			return { 
+				name: this.name, 
+				raw: this.raw[idx], 
+				perPop: this.perPop[idx],
+				perPopMax: this.perPopMax,
+			};
 		}
 		else {
-			return { name:this.name, raw:null, perPop:null };
+			return { 
+				name: this.name, 
+				raw: null, 
+				perPop: null,
+				perPopMax: null,
+			};
 		}
 	}
 }
@@ -62,8 +73,11 @@ export class RegionDataLookup {
 		// Calculate cases per 10k pop
 		let perPop = cases.reduce((arr, count) => { arr.push(count / (pop / 10000.0)); return arr; }, []);
 
+		// Calculate per pop max
+		let perPopMax = perPop.reduce((prev, curr) => curr > prev ? curr : prev, 0);
+
 		// Create data object
-		let data = new RegionData(name, cases, perPop);
+		let data = new RegionData(name, cases, perPop, perPopMax);
 
 		// Add to lookup
 		for (let code of codes) {
