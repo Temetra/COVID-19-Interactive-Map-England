@@ -114,13 +114,11 @@ export function updateMapFocus(region) {
 			let latlng = L.latLng(target.feature.properties.lat, target.feature.properties.long);
 			showFeaturePopup(latlng, target);
 			map.setView(target.getCenter(), focusZoom, { animate: true });
-			window.scrollTo(0, 0);
 		}
 	} else {
 		// Reset map if focused region is cleared
 		map.closePopup();
 		map.setView(center, zoom, { animate: true });
-		window.scrollTo(0, 0);
 	}
 }
 
