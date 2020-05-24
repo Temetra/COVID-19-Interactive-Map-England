@@ -36,6 +36,7 @@
 	on:click
 	on:mouseenter={setTooltip}
 	on:mouseleave={clearTooltip}
+	on:touchstart={clearTooltip}
 >
 	<slot></slot>
 </div>
