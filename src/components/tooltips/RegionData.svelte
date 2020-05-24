@@ -1,14 +1,14 @@
 <script>
 	import { onMount } from "svelte";
 	import sparkline from "@fnando/sparkline";
-	import { focusDayIndex, covidSummary, mapLookup, mapMaximums } from "~/stores/datastore.js";
+	import { focusDayIndex, mapLookup, mapMaximums } from "~/stores/datastore.js";
 	export let position, payload;
 
 	let totalChart, regionChart;
 
-	let totalCases = $covidSummary["Total cases"].Data;
+	let totalCases = $mapLookup.table["E92000001"].perPop;
 	let regionCases = $mapLookup.table[payload].perPop;
-	let minScale = $mapMaximums.perPop.value;
+	let minScale = $mapMaximums.countryPerPop.value;
 	$: perPop = regionCases[$focusDayIndex];
 
 	onMount(() => {
