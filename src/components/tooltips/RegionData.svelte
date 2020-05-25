@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from "svelte";
+	import { fade } from "svelte/transition";
 	import sparkline from "@fnando/sparkline";
 	import { focusDayIndex, mapLookup, mapMaximums } from "~/stores/datastore.js";
 	export let position, payload;
@@ -59,6 +60,7 @@
 	class="container"
 	class:top={position == "top"}
 	class:bottom={position == "bottom"}
+	transition:fade="{{ duration: 150 }}"
 >
 	<div class="pointer"></div>
 	<div class="content">

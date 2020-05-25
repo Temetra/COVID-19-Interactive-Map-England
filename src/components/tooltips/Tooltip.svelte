@@ -37,10 +37,7 @@
 	});
 
 	afterUpdate(() => {
-		if (tooltipElement) {
-			if (target) position = showTooltip(target, tooltipElement);
-			else hideTooltip(tooltipElement);
-		}
+		if (tooltipElement && target) showTooltip();
 	});
 
 	// Show tooltip in n millis
@@ -51,11 +48,13 @@
 		});
 	}
 
-	// Allow n millis for cursor to enter tooltip
+	// Clear vars if not cancelled after 50 ms
+	// Then reset position 200ms after, to allow for fade
 	function scheduleReset() {
-		timer.waitFor(50).then(() => {
-			target = template = payload = null;
-		});
+		timer.waitFor(50)
+			.then(() => { target = template = payload = null; })
+			.then(() => timer.waitFor(200))
+			.then(resetTooltipPosition);
 	}
 
 	// Cancel scheduled event
@@ -63,32 +62,27 @@
 		timer.cancel();
 	}
 
-	function showTooltip(targetElement, tooltipElement) {
+	function showTooltip() {
 		// Get size of elements
-		let targetRect = targetElement.getBoundingClientRect();
+		let targetRect = target.getBoundingClientRect();
 		let tooltipRect = tooltipElement.getBoundingClientRect();
 
-		// Get tooltip position
+		// Set tooltip position (top/bottom)
 		let containsTop = tooltipElement.firstElementChild.classList.contains("top");
 		let pastViewport = targetRect.bottom + tooltipRect.height >= window.innerHeight;
-		let position = containsTop || pastViewport ? "top" : "bottom";
+		position = containsTop || pastViewport ? "top" : "bottom";
 		
-		// Calculate top
+		// Calculate top coord
 		let top = 0;
 		if (position == "top") top = targetRect.top - tooltipRect.height + window.scrollY;
 		else top = targetRect.top + targetRect.height + window.scrollY;
 
 		// Show tooltip
-		tooltipElement.style.visibility = "visible";
 		tooltipElement.style.top = `${top}px`;
 		tooltipElement.style.left = `${targetRect.left}px`;
-
-		// Return calculated position
-		return position;
 	}
 
-	function hideTooltip(tooltipElement) {
-		tooltipElement.style.visibility = "hidden";
+	function resetTooltipPosition() {
 		tooltipElement.style.top = "0px";
 		tooltipElement.style.left = "0px";
 	}
@@ -102,7 +96,6 @@
 	.tooltip {
 		z-index:500;
 		position:absolute;
-		visibility:hidden;
 	}
 </style>
 
